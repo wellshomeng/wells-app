@@ -1,0 +1,24 @@
+{
+  "appId": "ng.wellshome.app",
+  "appName": "Wells",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "wellshome.ng",
+      "*.wellshome.ng",
+      "api.paystack.co",
+      "js.paystack.co",
+      "checkout.flutterwave.com",
+      "*.flutterwave.com"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#0C2340",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    }
+  }
+}
