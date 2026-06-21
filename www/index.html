@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wells — Buy. Sell. List. Anything in Nigeria.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a1628;--navy2:#112240;--navy3:#1a3460;
+  --gold:#e8821a;--gold2:#f5a040;--gold-pale:#fdf0e0;
+  --white:#fff;--off:#f8f9fc;--border:#e4e8f0;
+  --text:#1a2332;--text2:#4a5568;--muted:#8896a8;
+  --green:#16a34a;--red:#dc2626;--wa:#25D366;
+  --radius:10px;--radius-lg:16px;
+  --shadow:0 2px 16px rgba(10,22,40,.08);
+  --shadow-lg:0 8px 40px rgba(10,22,40,.14);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Outfit',sans-serif;background:var(--off);color:var(--text);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Syne',sans-serif}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+button{cursor:pointer;font-family:inherit;border:none}
+input,textarea,select{font-family:inherit}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* HEADER */
+.header{background:var(--navy);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(10,22,40,.3)}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;gap:1rem;flex-wrap:wrap}
+.logo{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--white);letter-spacing:-.03em;display:flex;flex-direction:column;line-height:1}
+.logo .logo-word{display:block;white-space:nowrap}
+.logo em{color:var(--gold);font-style:normal}
+.logo small{display:block;font-size:.55rem;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:400;margin-top:2px}
+.search-bar{flex:1;max-width:540px;display:flex;background:var(--white);border-radius:8px;overflow:hidden;box-shadow:0 0 0 2px transparent;transition:box-shadow .2s}
+.search-bar:focus-within{box-shadow:0 0 0 2px var(--gold)}
+.search-bar select{border:none;border-right:1px solid var(--border);padding:0 1rem;font-size:.82rem;color:var(--text2);background:var(--off);cursor:pointer;outline:none;min-width:110px}
+.search-bar input{flex:1;border:none;outline:none;padding:.7rem 1rem;font-size:.9rem;color:var(--text)}
+.search-bar button{background:var(--gold);color:var(--white);padding:0 1.25rem;font-size:.85rem;font-weight:600;transition:background .2s}
+.search-bar button:hover{background:var(--gold2)}
+.header-actions{display:flex;align-items:center;gap:.75rem}
+/* profile dropdown */
+.profile-menu{position:relative}
+.profile-trigger{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);color:#fff;padding:.4rem .7rem;border-radius:24px;cursor:pointer;font-weight:500;font-size:.88rem}
+.profile-trigger:hover{background:rgba(255,255,255,.2)}
+.profile-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-dropdown{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.18);min-width:210px;padding:.5rem;display:none;z-index:200}
+.profile-dropdown.open{display:block}
+.profile-dropdown button{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.7rem .8rem;border-radius:8px;font-size:.9rem;color:var(--text);background:transparent}
+.profile-dropdown button:hover{background:var(--off)}
+.profile-divider{height:1px;background:var(--border);margin:.35rem 0}
+/* dashboard */
+.dash-wrap{display:grid;grid-template-columns:260px 1fr;gap:1.5rem}
+.dash-side{background:var(--off);border-radius:var(--radius);padding:1.25rem;height:fit-content}
+.dash-profile{text-align:center;padding-bottom:1rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.dash-avatar{width:88px;height:88px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;margin:0 auto .75rem;overflow:hidden}
+.dash-avatar img{width:100%;height:100%;object-fit:cover}
+.dash-name{font-weight:700;font-size:1.05rem}
+.dash-phone{font-size:.82rem;color:var(--muted);margin-top:2px}
+.dash-nav button{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;padding:.7rem .8rem;border-radius:8px;font-size:.9rem;color:var(--text2);background:transparent;margin-bottom:2px}
+.dash-nav button.active{background:#fff;color:var(--navy);font-weight:600}
+.dash-nav button:hover{background:#fff}
+.dash-stat-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem}
+.dash-stat{background:var(--off);border:1px solid var(--border);border-radius:6px;padding:.3rem .6rem;font-size:.72rem;color:var(--text2)}
+.dash-stat b{color:var(--navy)}
+.dash-listing{display:flex;gap:1rem;align-items:flex-start;padding:1rem;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.75rem}
+.dash-listing-img{width:110px;height:84px;border-radius:8px;object-fit:cover;background:var(--navy2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden}
+.dash-listing-img img{width:100%;height:100%;object-fit:cover}
+.dash-actions{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
+.dash-actions button{font-size:.78rem;padding:.35rem .75rem;border-radius:6px;border:1px solid var(--border);background:#fff;color:var(--text2)}
+.dash-actions button.danger{color:var(--red);border-color:var(--red)}
+.dash-actions button:hover{background:var(--off)}
+.status-pill{font-size:.68rem;padding:1px 8px;border-radius:4px;font-weight:600}
+.status-live{background:rgba(22,163,74,.12);color:var(--green)}
+.status-pending{background:var(--gold-pale);color:#854F0B}
+.status-closed{background:#fee;color:var(--red)}
+@media(max-width:768px){.dash-wrap{grid-template-columns:1fr}}
+.btn-sell{background:var(--gold);color:var(--white);padding:.6rem 1.25rem;border-radius:8px;font-weight:600;font-size:.9rem;transition:background .2s,transform .15s;white-space:nowrap}
+.btn-sell:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-login{background:transparent;color:var(--white);padding:.6rem 1.1rem;border-radius:8px;font-weight:500;font-size:.9rem;border:1.5px solid rgba(255,255,255,.25);transition:border-color .2s,background .2s}
+.btn-login:hover{border-color:var(--gold);background:rgba(232,130,26,.1)}
+
+/* CAT NAV */
+.cat-nav{background:var(--navy2);padding:0 2rem;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.cat-nav::-webkit-scrollbar{display:none}
+.cat-btn{background:none;color:rgba(255,255,255,.7);padding:.7rem 1.1rem;font-size:.82rem;font-weight:500;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;display:flex;align-items:center;gap:.35rem}
+.cat-btn:hover,.cat-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);padding:3.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(232,130,26,.12) 0%,transparent 60%)}
+.hero-inner{position:relative;max-width:700px;margin:0 auto}
+.hero h1{font-size:clamp(2rem,4vw,3rem);color:var(--white);font-weight:800;line-height:1.1;margin-bottom:.75rem}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero p{color:rgba(255,255,255,.7);font-size:1.05rem;margin-bottom:2rem}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold)}
+.stat-lbl{font-size:.75rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em}
+
+/* CONTAINER */
+.container{max-width:1200px;margin:0 auto;padding:0 2rem}
+
+/* SECTIONS */
+.section{padding:2rem 0}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.section-title{font-size:1.25rem;font-weight:700;color:var(--navy)}
+.section-title span{color:var(--gold)}
+.see-all{font-size:.85rem;color:var(--gold);font-weight:600;cursor:pointer}
+.see-all:hover{text-decoration:underline}
+
+/* CATEGORY CARDS */
+.cats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:1rem}
+.cat-card{background:var(--white);border-radius:14px;padding:1.25rem 1rem;text-align:center;border:1.5px solid var(--border);cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s}
+.cat-card:hover{border-color:var(--gold);box-shadow:var(--shadow);transform:translateY(-2px)}
+.cat-card.active{border-color:var(--gold);background:var(--gold-pale)}
+.cat-icon{font-size:1.9rem;margin-bottom:.5rem}
+.cat-name{font-size:.8rem;font-weight:600;color:var(--text)}
+.cat-count{font-size:.7rem;color:var(--muted);margin-top:.15rem}
+
+/* FILTER BAR */
+.filter-bar{background:var(--white);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;box-shadow:var(--shadow);margin-bottom:1.5rem;border:1px solid var(--border)}
+.filter-bar select,.filter-bar input{padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:6px;font-size:.85rem;color:var(--text);background:var(--off);outline:none;transition:border-color .2s}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--gold)}
+.filter-label{font-size:.8rem;font-weight:600;color:var(--text2)}
+.btn-reset{background:var(--navy);color:var(--white);padding:.5rem 1.25rem;border-radius:6px;font-size:.85rem;font-weight:600;transition:background .2s}
+.btn-reset:hover{background:var(--navy3)}
+
+/* LISTINGS GRID */
+.listings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem}
+.listing-card{background:var(--white);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:box-shadow .2s,transform .2s;cursor:pointer;position:relative}
+.listing-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px)}
+.listing-img{height:178px;background:var(--navy2);display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
+.listing-img img{width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;top:.6rem;left:.6rem;padding:.2rem .6rem;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase}
+.badge-featured{background:var(--gold);color:#fff}
+.badge-new{background:var(--green);color:#fff}
+.badge-used{background:var(--navy);color:#fff}
+.save-btn{position:absolute;top:.6rem;right:.6rem;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:1rem;border:none;cursor:pointer;transition:background .2s,transform .2s;color:var(--muted)}
+.save-btn:hover{background:#fff;transform:scale(1.1)}
+.save-btn.saved{color:var(--gold)}
+.listing-body{padding:1rem}
+.listing-price{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;color:var(--gold);margin-bottom:.25rem;display:flex;align-items:baseline;gap:.4rem}
+.listing-price small{font-size:.75rem;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:400}
+.listing-title{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:.35rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.listing-meta{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
+.listing-location{font-size:.73rem;color:var(--muted);display:flex;align-items:center;gap:.2rem}
+.listing-time{font-size:.7rem;color:var(--muted)}
+.listing-footer{padding:.75rem 1rem;border-top:1px solid var(--border);display:flex;gap:.5rem}
+.btn-wa{flex:1;background:var(--wa);color:#fff;padding:.5rem;border-radius:6px;font-size:.78rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:.3rem;transition:background .2s;text-decoration:none}
+.btn-wa:hover{background:#1ebe5c}
+.btn-view{flex:1;background:var(--off);color:var(--text);padding:.5rem;border-radius:6px;font-size:.78rem;font-weight:600;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s,color .2s}
+.btn-view:hover{background:var(--gold-pale);border-color:var(--gold);color:var(--gold)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(10,22,40,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--radius-lg);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:1}
+.modal-header h2{font-size:1.15rem;color:var(--navy)}
+.modal-close{width:34px;height:34px;border-radius:50%;background:var(--off);color:var(--text2);font-size:1.1rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);transition:background .2s}
+.modal-close:hover{background:var(--border)}
+.modal-body{padding:1.5rem}
+
+/* DETAIL MODAL */
+.detail-hero{height:260px;background:var(--navy2);display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;overflow:hidden}
+.detail-hero img{width:100%;height:100%;object-fit:cover}
+.gallery{position:relative;background:#000;border-radius:var(--radius);overflow:hidden}
+.gallery-main{position:relative;width:100%;height:340px;background:#000;display:flex;align-items:center;justify-content:center}
+.gallery-main img{width:100%;height:100%;object-fit:contain;background:#000}
+.lightbox{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.95);align-items:center;justify-content:center;touch-action:pan-y}
+.lightbox.open{display:flex}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .2s;cursor:zoom-in;touch-action:none}
+.lightbox-close{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:1.3rem;display:flex;align-items:center;justify-content:center;z-index:2;border:none;cursor:pointer}
+.lightbox-counter{position:absolute;top:24px;left:50%;transform:translateX(-50%);color:#fff;font-size:.9rem;background:rgba(0,0,0,.4);padding:4px 14px;border-radius:20px;z-index:2}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;z-index:2}
+.lightbox-nav:hover{background:rgba(255,255,255,.3)}
+.lightbox-nav.prev{left:14px}
+.lightbox-nav.next{right:14px}
+@media(max-width:480px){.lightbox-nav{width:42px;height:42px;font-size:1.6rem}}
+/* company page overlay */
+.page-overlay{display:none;position:fixed;inset:0;z-index:900;background:var(--bg,#fff);overflow-y:auto}
+.page-overlay.open{display:block}
+.page-header{position:sticky;top:0;background:var(--navy);color:#fff;display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;z-index:2}
+.page-back{background:rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;font-size:1.2rem;cursor:pointer;flex-shrink:0}
+.page-header h2{font-family:'Syne',sans-serif;font-size:1.15rem}
+.page-content{max-width:760px;margin:0 auto;padding:1.75rem 1.25rem 4rem;color:var(--text);line-height:1.75;font-size:.95rem}
+.page-content h3{font-family:'Syne',sans-serif;color:var(--navy);font-size:1.15rem;margin:1.75rem 0 .6rem}
+.page-content h3:first-child{margin-top:0}
+.page-content p{margin-bottom:1rem;color:var(--text2)}
+.page-content ul{margin:0 0 1rem 1.25rem;color:var(--text2)}
+.page-content li{margin-bottom:.5rem}
+.page-content a{color:var(--gold);font-weight:600}
+.page-contact-card{background:var(--off);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+.page-contact-card .row{display:flex;align-items:center;gap:.6rem;padding:.5rem 0;font-size:.95rem}
+.gallery-main .emoji-fallback{font-size:5rem}
+.gallery-counter{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.65);color:#fff;font-size:.78rem;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;z-index:2}
+.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;transition:background .2s;z-index:2}
+.gallery-nav:hover{background:rgba(0,0,0,.8)}
+.gallery-nav.prev{left:10px}
+.gallery-nav.next{right:10px}
+.gallery-thumbs{display:flex;gap:8px;padding:10px;overflow-x:auto;background:var(--off);scrollbar-width:thin}
+.gallery-thumbs::-webkit-scrollbar{height:6px}
+.gallery-thumbs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.gallery-thumb{flex:0 0 auto;width:78px;height:62px;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;background:var(--navy2)}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover}
+.gallery-thumb.active{border-color:var(--gold)}
+.detail-price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.detail-price{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold)}
+.neg-tag{font-size:.75rem;background:var(--gold-pale);color:#854F0B;padding:.2rem .6rem;border-radius:4px;font-weight:600;border:.5px solid #EF9F27}
+.detail-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.detail-tag{font-size:.75rem;background:var(--off);color:var(--text2);padding:.25rem .6rem;border-radius:4px;border:1px solid var(--border)}
+/* spec block (Jiji-style) */
+.spec-block{border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1rem}
+.spec-icons{display:flex;justify-content:space-around;gap:.5rem;padding-bottom:1rem;margin-bottom:1rem;border-bottom:1px solid var(--border)}
+.spec-icon{text-align:center;flex:1}
+.spec-icon-emoji{width:52px;height:52px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto .35rem}
+.spec-icon-val{font-size:.82rem;font-weight:600;color:var(--text)}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.spec-cell{min-width:0}
+.spec-val{font-weight:600;font-size:.95rem;color:var(--text);word-break:break-word}
+.spec-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.spec-more{color:var(--gold);font-weight:600;font-size:.85rem;margin-top:.85rem;background:transparent}
+.cat-fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 .75rem}
+.card-pills{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem}
+.card-pill{font-size:.7rem;background:var(--off);color:var(--text2);padding:2px 8px;border-radius:4px;white-space:nowrap}
+@media(max-width:480px){.cat-fields-grid{grid-template-columns:1fr}}
+.detail-section{margin-bottom:1.25rem}
+.detail-section h4{font-size:.78rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+.detail-section p{font-size:.9rem;color:var(--text2);line-height:1.75}
+.seller-card{background:var(--off);border-radius:var(--radius);padding:1rem;display:flex;align-items:center;gap:1rem;border:1px solid var(--border);margin-bottom:1.25rem}
+.seller-avatar{width:44px;height:44px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:1.1rem;flex-shrink:0}
+.seller-name{font-weight:700;font-size:.9rem;color:var(--text)}
+.seller-meta{font-size:.75rem;color:var(--muted);margin-top:2px}
+.verified{font-size:.68rem;background:rgba(22,163,74,.1);color:var(--green);padding:.15rem .5rem;border-radius:4px;font-weight:600;border:1px solid rgba(22,163,74,.25)}
+.detail-cta{display:flex;gap:.75rem}
+.detail-cta .btn-wa{flex:1;padding:.85rem;font-size:.95rem;border-radius:8px}
+.safety-tip{background:var(--gold-pale);border-left:3px solid var(--gold);padding:.85rem 1rem;border-radius:0 var(--radius) var(--radius) 0;font-size:.82rem;color:#854F0B;line-height:1.6;margin-top:1.25rem}
+
+/* FORM */
+.form-group{margin-bottom:1.1rem}
+.form-group label{display:block;font-size:.78rem;font-weight:700;color:var(--navy);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.04em}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;color:var(--text);background:var(--white);outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,130,26,.1)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-hint{font-size:.73rem;color:var(--muted);margin-top:.3rem}
+.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.5rem}
+.photo-slot{aspect-ratio:1;border:2px dashed var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.68rem;color:var(--muted);gap:.3rem;transition:border-color .2s;position:relative;overflow:hidden;background:var(--off)}
+.photo-slot:hover{border-color:var(--gold)}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-slot input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.photo-preview{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--off);border:1px solid var(--border)}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.photo-preview .ph-remove{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;border:none;cursor:pointer;font-size:.8rem;line-height:1;display:flex;align-items:center;justify-content:center;z-index:2}
+.photo-preview .ph-main{position:absolute;bottom:4px;left:4px;background:var(--gold);color:#fff;font-size:.6rem;padding:1px 6px;border-radius:4px;font-weight:700}
+.photo-preview .ph-spin{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.7);font-size:.7rem;color:var(--navy)}
+
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:1.5rem}
+.tab-btn{padding:.7rem 1.25rem;font-size:.88rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;background:none;transition:color .2s,border-color .2s}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* STEPS */
+.steps{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem}
+.step{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;border:2px solid var(--border);color:var(--muted);background:var(--white);transition:all .2s}
+.step-dot.done{background:var(--gold);border-color:var(--gold);color:#fff}
+.step-dot.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.step-label{font-size:.68rem;color:var(--muted);font-weight:500}
+.step-label.active{color:var(--gold)}
+.step-line{flex:1;height:2px;background:var(--border);margin-top:-18px}
+.step-line.done{background:var(--gold)}
+
+/* TRUST STRIP */
+.trust-strip{background:var(--navy);padding:1rem 2rem;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.8);font-size:.8rem}
+
+/* FOOTER */
+.footer{background:var(--navy);color:rgba(255,255,255,.7);padding:3rem 2rem 1.5rem;margin-top:3rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2rem}
+.footer-brand .logo{font-size:1.4rem;margin-bottom:.75rem}
+.footer-brand p{font-size:.82rem;line-height:1.7;max-width:240px}
+.footer-heading{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.footer-links a{font-size:.82rem;color:rgba(255,255,255,.6);transition:color .2s;cursor:pointer}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:1.25rem;text-align:center;font-size:.76rem;color:rgba(255,255,255,.4)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:3rem;color:var(--muted)}
+.empty-icon{font-size:3rem;margin-bottom:1rem}
+.empty-text{font-size:1rem;color:var(--text2);margin-bottom:.5rem;font-weight:600}
+
+/* NOTIFICATION */
+.notif{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;background:var(--navy);color:var(--white);padding:.85rem 1.25rem;border-radius:10px;font-size:.88rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.6rem;transform:translateY(100px);opacity:0;transition:transform .3s,opacity .3s;border-left:4px solid var(--gold)}
+.notif.show{transform:translateY(0);opacity:1}
+/* announcement banner */
+.announce-banner{display:none;align-items:center;gap:.6rem;background:linear-gradient(90deg,var(--gold),var(--gold2,#d4740f));color:#fff;padding:.7rem 1rem;font-size:.88rem}
+.announce-banner.show{display:flex}
+.announce-icon{font-size:1.1rem;flex-shrink:0}
+.announce-body{flex:1;min-width:0}
+.announce-body strong{margin-right:.5rem}
+.announce-close{background:rgba(255,255,255,.2);color:#fff;width:24px;height:24px;border-radius:50%;flex-shrink:0;cursor:pointer;font-size:.8rem}
+/* tappable message notification */
+.msg-notif{position:fixed;top:1rem;left:50%;transform:translate(-50%,-130%);z-index:1100;background:#fff;color:var(--text);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.25);display:flex;align-items:flex-start;gap:.7rem;padding:.85rem 1rem;width:min(420px,calc(100% - 1.5rem));cursor:pointer;transition:transform .35s;border-left:4px solid var(--gold)}
+.msg-notif.show{transform:translate(-50%,0)}
+.msg-notif-icon{font-size:1.4rem;flex-shrink:0}
+.msg-notif-body{flex:1;min-width:0}
+.msg-notif-name{font-weight:700;font-size:.92rem}
+.msg-notif-listing{font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg-notif-text{font-size:.84rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.msg-notif-close{background:transparent;color:var(--muted);font-size:.9rem;flex-shrink:0;cursor:pointer;padding:0 .2rem}
+
+/* MOBILE FAB */
+.fab{display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;background:var(--gold);color:var(--white);width:56px;height:56px;border-radius:50%;font-size:1.6rem;box-shadow:0 4px 16px rgba(232,130,26,.5);align-items:center;justify-content:center;transition:transform .2s}
+.fab:hover{transform:scale(1.08)}
+
+/* ═══ MOBILE BOTTOM NAV (Jiji-style) ═══ */
+.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:400;background:#fff;border-top:1px solid var(--border);grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom,0);box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+.bn-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px 6px;background:transparent;color:var(--muted);font-size:.62rem;font-weight:600;position:relative;cursor:pointer}
+.bn-item .bn-icon{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bn-item.active{color:var(--gold)}
+.bn-item.active .bn-icon{stroke:var(--gold)}
+.bn-badge{position:absolute;top:4px;right:calc(50% - 18px);min-width:8px;height:8px;background:var(--red);border-radius:50%}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .bottom-nav{display:grid}
+  body{padding-bottom:64px}
+  .fab{display:none}
+  footer.footer{margin-bottom:64px}
+  .header-top{padding:.6rem .75rem;gap:.5rem;flex-wrap:wrap}
+  .logo{font-size:1.4rem}
+  .logo small{font-size:.5rem}
+  .search-bar{order:3;width:100%;max-width:100%;flex-basis:100%}
+  .search-bar select{min-width:0;max-width:96px;padding:0 .5rem;font-size:.75rem}
+  .search-bar input{padding:.6rem .65rem;font-size:.85rem;min-width:0}
+  .search-bar button{padding:0 .9rem;font-size:.8rem}
+  .header-actions{gap:.4rem}
+  #nav-login-btn{padding:.45rem .75rem;font-size:.8rem}
+  .btn-sell{padding:.5rem .8rem;font-size:.8rem}
+  #nav-msgs-btn{padding:.45rem .6rem;font-size:.8rem}
+  .profile-trigger{padding:.35rem .5rem}
+  .profile-name{display:none}
+  .cat-nav{padding:0 .75rem}
+  .cat-btn{padding:.65rem .85rem;font-size:.8rem}
+  .hero{padding:2rem 1rem}
+  .container{padding:0 .85rem}
+  .listings-grid{grid-template-columns:1fr 1fr;gap:.7rem}
+  .listing-img{height:140px}
+  .cats-grid{grid-template-columns:repeat(3,1fr);gap:.6rem}
+  .cat-card{padding:1rem .5rem}
+  .cat-icon{font-size:1.7rem}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:1.5rem}
+  .filter-bar{flex-direction:column;align-items:stretch}
+  .form-row{grid-template-columns:1fr}
+  .photo-grid{grid-template-columns:repeat(3,1fr)}
+  .fab{display:flex}
+  .trust-strip{gap:1rem;padding:1rem}
+  .detail-cta{flex-direction:column}
+  .dash-wrap{grid-template-columns:1fr;gap:1rem}
+  .dash-side{padding:1rem}
+  .modal{max-width:100%!important}
+  .modal-body{padding:1rem}
+  .spec-icon-emoji{width:44px;height:44px;font-size:1.2rem}
+  .gallery-main{height:260px}
+}
+@media(max-width:480px){
+  .header-top{padding:.55rem .65rem}
+  .logo{font-size:1.25rem}
+  .btn-sell{padding:.45rem .65rem;font-size:.76rem}
+  #nav-login-btn{padding:.4rem .6rem;font-size:.76rem}
+  .listings-grid{grid-template-columns:1fr 1fr;gap:.55rem}
+  .listing-img{height:120px}
+  .listing-title{font-size:.85rem}
+  .listing-price{font-size:.95rem}
+  .hero h1{font-size:1.6rem}
+  .footer-grid{grid-template-columns:1fr}
+  .modal{border-radius:var(--radius) var(--radius) 0 0;align-self:flex-end;max-height:94vh;width:100%}
+  .modal-overlay{align-items:flex-end;padding:0}
+  .spec-grid{grid-template-columns:1fr 1fr}
+  .cat-fields-grid{grid-template-columns:1fr}
+  .gallery-main{height:230px}
+  .gallery-thumb{width:60px;height:48px}
+  .dash-listing{flex-direction:column}
+  .dash-listing-img{width:100%;height:160px}
+}
+/* plans / checkout */
+.plan-card{border:2px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:1rem;transition:border-color .2s}
+.plan-card.popular{border-color:var(--gold)}
+.plan-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem}
+.plan-name{font-weight:700;font-size:1.1rem;color:var(--navy)}
+.plan-price{font-weight:800;color:var(--gold);font-size:1.25rem}
+.plan-price small{font-size:.7rem;color:var(--muted);font-weight:500}
+.plan-feats{list-style:none;margin:.5rem 0 .85rem;padding:0}
+.plan-feats li{font-size:.85rem;color:var(--text2);padding:.2rem 0;padding-left:1.3rem;position:relative}
+.plan-feats li:before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.plan-tag{display:inline-block;font-size:.65rem;background:var(--gold);color:#fff;padding:2px 8px;border-radius:4px;font-weight:700;margin-left:.5rem;vertical-align:middle}
+.pay-choice{display:flex;gap:.6rem;margin:.5rem 0 0}
+.pay-choice button{flex:1;padding:.7rem;border:1px solid var(--border);border-radius:8px;font-weight:600;font-size:.85rem;background:#fff;cursor:pointer}
+.pay-choice button:hover{border-color:var(--gold)}
+.oneoff-box{background:var(--off);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:1.25rem}
+</style>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+</head>
+<body>
+
+<!-- IN-APP ANNOUNCEMENT BANNER -->
+<div class="announce-banner" id="announce-banner">
+  <span class="announce-icon">📢</span>
+  <div class="announce-body">
+    <strong id="announce-subject"></strong>
+    <span id="announce-text"></span>
+  </div>
+  <button class="announce-close" onclick="dismissAnnouncement()">✕</button>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-top">
+    <a role="button" class="logo" style="cursor:pointer" onclick="filterCat('all',null);scrollTop()">
+      <span class="logo-word">W<em>ells</em></span>
+      <small>by Wellshome Properties</small>
+    </a>
+    <div class="search-bar">
+      <select id="search-cat">
+        <option value="">All Categories</option>
+        <option value="property">Property</option>
+        <option value="vehicles">Vehicles</option>
+        <option value="electronics">Electronics</option>
+        <option value="appliances">Appliances</option>
+        <option value="furniture">Furniture</option>
+        <option value="fashion">Fashion</option>
+        <option value="other">Other</option>
+      </select>
+      <input type="text" id="search-input" placeholder="Search for anything...">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="header-actions">
+      <button class="btn-login" id="nav-login-btn" onclick="openModal('auth-modal')">Log In</button>
+      <button class="btn-login" id="nav-msgs-btn" onclick="openMessages()" style="display:none">💬 <span id="nav-unread"></span></button>
+      <div class="profile-menu" id="profile-menu" style="display:none">
+        <button class="profile-trigger" onclick="toggleProfileMenu(event)">
+          <span class="profile-avatar" id="nav-avatar">?</span>
+          <span id="nav-name" class="profile-name"></span>
+          <span style="font-size:.7rem">▾</span>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <button onclick="openDashboard('adverts')">🗂 My Adverts</button>
+          <button onclick="openPlans('Upgrade your account')">⭐ Plans & Billing</button>
+          <button onclick="openDashboard('settings')">⚙ Settings</button>
+          <button onclick="viewMyShop()">🏪 My Shop</button>
+          <button onclick="openMessages()">💬 Messages</button>
+          <div class="profile-divider"></div>
+          <button onclick="logout()">↩ Log Out</button>
+        </div>
+      </div>
+      <button class="btn-sell" onclick="openSell()">+ Post Ad</button>
+    </div>
+  </div>
+  <nav class="cat-nav">
+    <button class="cat-btn active" onclick="filterCat('all',this)">🏷 All</button>
+    <button class="cat-btn" onclick="filterCat('property',this)">🏠 Property</button>
+    <button class="cat-btn" onclick="filterCat('vehicles',this)">🚗 Vehicles</button>
+    <button class="cat-btn" onclick="filterCat('electronics',this)">📱 Electronics</button>
+    <button class="cat-btn" onclick="filterCat('appliances',this)">🧊 Appliances</button>
+    <button class="cat-btn" onclick="filterCat('furniture',this)">🛋 Furniture</button>
+    <button class="cat-btn" onclick="filterCat('fashion',this)">👗 Fashion</button>
+    <button class="cat-btn" onclick="filterCat('other',this)">📦 Other</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Nigeria's <em>Freshest</em><br>Marketplace</h1>
+    <p>Buy, sell, and list anything — properties, cars, appliances and more.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="stat-listings">0</div><div class="stat-lbl">Active Listings</div></div>
+      <div class="stat"><div class="stat-num" id="stat-sellers">0</div><div class="stat-lbl">Sellers</div></div>
+      <div class="stat"><div class="stat-num">12+</div><div class="stat-lbl">Cities</div></div>
+      <div class="stat"><div class="stat-num">Free</div><div class="stat-lbl">To List</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="container">
+
+    <!-- CATEGORIES -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Browse <span>Categories</span></h2>
+      </div>
+      <div class="cats-grid">
+        <div class="cat-card" onclick="filterCat('property',null)"><div class="cat-icon">🏠</div><div class="cat-name">Property</div><div class="cat-count" id="cnt-property">0 listings</div></div>
+        <div class="cat-card" onclick="filterCat('vehicles',null)"><div class="cat-icon">🚗</div><div class="cat-name">Vehicles</div><div class="cat-count" id="cnt-vehicles">0 listings</div></div>
+        <div class="cat-card" onclick="filterCat('electronics',null)"><div class="cat-icon">📱</div><div class="cat-name">Electronics</div><div class="cat-count" id="cnt-electronics">0 listings</div></div>
+        <div class="cat-card" onclick="filterCat('appliances',null)"><div class="cat-icon">🧊</div><div class="cat-name">Appliances</div><div class="cat-count" id="cnt-appliances">0 listings</div></div>
+        <div class="cat-card" onclick="filterCat('furniture',null)"><div class="cat-icon">🛋</div><div class="cat-name">Furniture</div><div class="cat-count" id="cnt-furniture">0 listings</div></div>
+        <div class="cat-card" onclick="filterCat('fashion',null)"><div class="cat-icon">👗</div><div class="cat-name">Fashion</div><div class="cat-count" id="cnt-fashion">0 listings</div></div>
+        <div class="cat-card" onclick="filterCat('other',null)"><div class="cat-icon">📦</div><div class="cat-name">Other</div><div class="cat-count" id="cnt-other">0 listings</div></div>
+        <div class="cat-card" onclick="openSell()" style="border-style:dashed;border-color:var(--gold)"><div class="cat-icon">➕</div><div class="cat-name" style="color:var(--gold)">Post Free</div><div class="cat-count">Sell anything</div></div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <select id="filter-location" onchange="applyFilters()">
+        <option value="">All Locations</option>
+        <option>Lagos</option><option>Abuja</option><option>Ibadan</option>
+        <option>Osogbo</option><option>Kano</option><option>Port Harcourt</option>
+        <option>Enugu</option><option>Ilorin</option>
+      </select>
+      <select id="filter-condition" onchange="applyFilters()">
+        <option value="">Any Condition</option>
+        <option value="new">New</option><option value="used">Used</option>
+      </select>
+      <select id="filter-sort" onchange="applyFilters()">
+        <option value="newest">Newest First</option>
+        <option value="price-low">Price: Low → High</option>
+        <option value="price-high">Price: High → Low</option>
+      </select>
+      <button class="btn-reset" onclick="resetFilters()">Reset</button>
+    </div>
+
+    <!-- LISTINGS -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title" id="listings-title">All <span>Listings</span></h2>
+        <span class="see-all" id="listing-count">0 items</span>
+      </div>
+      <div class="listings-grid" id="listings-grid"></div>
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">No listings found</div>
+        <p>Try adjusting your filters or be the first to post!</p>
+        <button class="btn-sell" style="margin-top:1rem" onclick="openSell()">Post First Ad</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-item">🔒 Secure Platform</div>
+  <div class="trust-item">✅ Verified Sellers</div>
+  <div class="trust-item">💬 Direct WhatsApp Contact</div>
+  <div class="trust-item">🆓 Free to List</div>
+  <div class="trust-item">🏢 By Wellshome Properties LTD</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="logo-word">W<em>ells</em></span></div>
+        <p>Nigeria's trusted marketplace for buying and selling properties, vehicles, electronics, appliances and more.</p>
+        <p style="margin-top:.75rem;font-size:.78rem">A product of Wellshome Properties LTD<br>CAC Registered · Osogbo, Osun State</p>
+      </div>
+      <div>
+        <div class="footer-heading">Categories</div>
+        <ul class="footer-links">
+          <li><a role="button" onclick="filterCat('property',null);scrollTop()">Property</a></li>
+          <li><a role="button" onclick="filterCat('vehicles',null);scrollTop()">Vehicles</a></li>
+          <li><a role="button" onclick="filterCat('electronics',null);scrollTop()">Electronics</a></li>
+          <li><a role="button" onclick="filterCat('appliances',null);scrollTop()">Appliances</a></li>
+          <li><a role="button" onclick="filterCat('furniture',null);scrollTop()">Furniture</a></li>
+          <li><a role="button" onclick="filterCat('fashion',null);scrollTop()">Fashion</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="https://wellshome.ng" target="_blank" rel="noopener">Wellshome.ng</a></li>
+          <li><a role="button" onclick="openPage('about')">About Wells</a></li>
+          <li><a role="button" onclick="openPage('safety')">Safety Tips</a></li>
+          <li><a role="button" onclick="openPage('contact')">Contact Us</a></li>
+          <li><a role="button" onclick="openPage('privacy')">Privacy Policy</a></li>
+          <li><a role="button" onclick="openPage('terms')">Terms of Use</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/2347088126815">WhatsApp: 07088126815</a></li>
+          <li><a href="mailto:info@wellshome.ng">info@wellshome.ng</a></li>
+          <li><a href="https://wellshome.ng" target="_blank">wellshome.ng</a></li>
+          <li>Osogbo, Osun State</li>
+        </ul>
+        <div style="margin-top:1rem">
+          <div class="footer-heading">Mobile App</div>
+          <p style="font-size:.76rem;color:rgba(255,255,255,.4)">Coming soon on Android & iOS</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Wells — A Wellshome Properties LTD Product. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- FAB -->
+<button class="fab" onclick="openSell()">+</button>
+
+<!-- ═══ MOBILE BOTTOM NAVIGATION (Jiji-style) ═══ -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bn-item active" data-tab="home" onclick="navTab('home')">
+    <svg viewBox="0 0 24 24" class="bn-icon"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+    <span>Home</span>
+  </button>
+  <button class="bn-item" data-tab="saved" onclick="navTab('saved')">
+    <svg viewBox="0 0 24 24" class="bn-icon"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+    <span>Saved</span>
+  </button>
+  <button class="bn-item bn-sell" data-tab="sell" onclick="navTab('sell')">
+    <svg viewBox="0 0 24 24" class="bn-icon"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg>
+    <span>Sell</span>
+  </button>
+  <button class="bn-item" data-tab="messages" onclick="navTab('messages')">
+    <svg viewBox="0 0 24 24" class="bn-icon"><path d="M4 5h16v11H8l-4 3z"/></svg>
+    <span>Messages</span>
+    <i class="bn-badge" id="bn-msg-badge" style="display:none"></i>
+  </button>
+  <button class="bn-item" data-tab="profile" onclick="navTab('profile')">
+    <svg viewBox="0 0 24 24" class="bn-icon"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<!-- ═══ MODAL: CONTENT PAGE (About / Safety / Contact / Privacy / Terms) ═══ -->
+<div class="modal-overlay" id="page-modal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <h2 id="page-title">Page</h2>
+      <button class="modal-close" onclick="closeModal('page-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="page-body"></div>
+  </div>
+</div>
+
+<!-- IMAGE LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
+  <span class="lightbox-counter" id="lightbox-count"></span>
+  <button class="lightbox-nav prev" id="lb-prev" onclick="event.stopPropagation();lightboxMove(-1)">‹</button>
+  <img id="lightbox-img" src="" alt="" onclick="toggleLightboxZoom(event)">
+  <button class="lightbox-nav next" id="lb-next" onclick="event.stopPropagation();lightboxMove(1)">›</button>
+</div>
+
+<!-- COMPANY PAGE OVERLAY -->
+<div class="page-overlay" id="page-overlay">
+  <div class="page-header">
+    <button class="page-back" onclick="closePage()">←</button>
+    <h2 id="page-title">Page</h2>
+  </div>
+  <div class="page-content" id="page-content"></div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">✅ <span id="notif-text"></span></div>
+
+<!-- TAPPABLE MESSAGE NOTIFICATION -->
+<div class="msg-notif" id="msg-notif">
+  <div class="msg-notif-icon">💬</div>
+  <div class="msg-notif-body">
+    <div class="msg-notif-name" id="msg-notif-name"></div>
+    <div class="msg-notif-listing" id="msg-notif-listing"></div>
+    <div class="msg-notif-text" id="msg-notif-text"></div>
+  </div>
+  <button class="msg-notif-close" onclick="event.stopPropagation();hideMessageNotif()">✕</button>
+</div>
+
+<!-- ═══ MODAL: POST AD ═══ -->
+<div class="modal-overlay" id="sell-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📸 Post Your Ad</h2>
+      <button class="modal-close" onclick="closeModal('sell-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- STEPS -->
+      <div class="steps">
+        <div class="step"><div class="step-dot active" id="sd1">1</div><div class="step-label active" id="sl1">Category</div></div>
+        <div class="step-line" id="sline1"></div>
+        <div class="step"><div class="step-dot" id="sd2">2</div><div class="step-label" id="sl2">Details</div></div>
+        <div class="step-line" id="sline2"></div>
+        <div class="step"><div class="step-dot" id="sd3">3</div><div class="step-label" id="sl3">Contact</div></div>
+        <div class="step-line" id="sline3"></div>
+        <div class="step"><div class="step-dot" id="sd4">4</div><div class="step-label" id="sl4">Review</div></div>
+      </div>
+
+      <!-- STEP 1: CATEGORY -->
+      <div id="step-1">
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="ad-cat" onchange="updateCatUI()">
+            <option value="">Select category</option>
+            <option value="property">🏠 Property</option>
+            <option value="vehicles">🚗 Vehicles</option>
+            <option value="electronics">📱 Electronics</option>
+            <option value="appliances">🧊 Home Appliances</option>
+            <option value="furniture">🛋 Furniture</option>
+            <option value="fashion">👗 Fashion & Clothing</option>
+            <option value="other">📦 Other</option>
+          </select>
+        </div>
+        <div class="form-group" id="subcat-group" style="display:none">
+          <label>Sub-category</label>
+          <select id="ad-subcat"></select>
+        </div>
+        <button onclick="goStep(2)" style="width:100%;background:var(--gold);color:#fff;padding:.9rem;border-radius:8px;font-size:.95rem;font-weight:700;margin-top:.5rem">Continue →</button>
+      </div>
+
+      <!-- STEP 2: DETAILS -->
+      <div id="step-2" style="display:none">
+        <div class="form-group">
+          <label>Ad Title *</label>
+          <input type="text" id="ad-title" placeholder="e.g. Samsung 65-inch Smart TV — Lagos" maxlength="80">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price (₦) *</label>
+            <input type="number" id="ad-price" placeholder="e.g. 150000">
+          </div>
+          <div class="form-group">
+            <label>Condition</label>
+            <select id="ad-condition">
+              <option value="used">Used</option>
+              <option value="new">New</option>
+              <option value="refurbished">Refurbished</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Location *</label>
+            <select id="ad-location">
+              <option value="">Select state</option>
+              <option>Osogbo, Osun State</option><option>Lagos</option>
+              <option>Abuja, FCT</option><option>Ibadan, Oyo State</option>
+              <option>Kano State</option><option>Port Harcourt, Rivers State</option>
+              <option>Enugu State</option><option>Ilorin, Kwara State</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Negotiable?</label>
+            <select id="ad-neg">
+              <option value="yes">Yes — Negotiable</option>
+              <option value="no">No — Fixed price</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="ad-desc" placeholder="Describe what you are selling — condition, features, reason for selling..."></textarea>
+        </div>
+        <div id="cat-fields"></div>
+        <div class="form-group">
+          <label>Photos (select multiple — up to 10)</label>
+          <div class="photo-slot" id="photo-dropzone" style="aspect-ratio:auto;padding:1.4rem;flex-direction:row;gap:.5rem">
+            <input type="file" accept="image/*" multiple onchange="handlePhotos(event)">
+            <span style="font-size:1.5rem">📷</span>
+            <span style="font-size:.85rem">Tap to add photos — you can pick several at once</span>
+          </div>
+          <div class="photo-grid" id="photo-grid" style="margin-top:.75rem"></div>
+          <div class="form-hint" id="photo-hint">First photo becomes the main listing photo. Drag is not needed — order follows selection.</div>
+        </div>
+        <div style="display:flex;gap:.75rem;margin-top:.5rem">
+          <button onclick="goStep(1)" style="flex:1;background:var(--off);color:var(--text);padding:.85rem;border-radius:8px;font-size:.9rem;font-weight:600;border:1px solid var(--border)">← Back</button>
+          <button onclick="goStep(3)" style="flex:2;background:var(--gold);color:#fff;padding:.85rem;border-radius:8px;font-size:.9rem;font-weight:700">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: CONTACT -->
+      <div id="step-3" style="display:none">
+        <div class="form-group">
+          <label>Your Name / Business Name *</label>
+          <input type="text" id="ad-seller" placeholder="e.g. Wellshome Properties LTD">
+        </div>
+        <div class="form-group">
+          <label>WhatsApp Number *</label>
+          <input type="tel" id="ad-phone" placeholder="e.g. 07088126815">
+          <div class="form-hint">Buyers will contact you directly on WhatsApp</div>
+        </div>
+        <div class="safety-tip">🔒 Your number is only shared with buyers who enquire about your listing. We never sell your data.</div>
+        <div style="display:flex;gap:.75rem;margin-top:1rem">
+          <button onclick="goStep(2)" style="flex:1;background:var(--off);color:var(--text);padding:.85rem;border-radius:8px;font-size:.9rem;font-weight:600;border:1px solid var(--border)">← Back</button>
+          <button onclick="goStep(4)" style="flex:2;background:var(--gold);color:#fff;padding:.85rem;border-radius:8px;font-size:.9rem;font-weight:700">Review Ad →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: REVIEW -->
+      <div id="step-4" style="display:none">
+        <div id="review-content"></div>
+        <div style="display:flex;gap:.75rem;margin-top:1rem">
+          <button onclick="goStep(3)" style="flex:1;background:var(--off);color:var(--text);padding:.85rem;border-radius:8px;font-size:.9rem;font-weight:600;border:1px solid var(--border)">← Back</button>
+          <button onclick="submitAd()" style="flex:2;background:var(--gold);color:#fff;padding:.9rem;border-radius:8px;font-size:.95rem;font-weight:700">🚀 Publish Ad — Free</button>
+        </div>
+        <p style="text-align:center;font-size:.73rem;color:var(--muted);margin-top:.75rem">By posting you agree to our Terms of Use. Your listing goes live immediately.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: AUTH ═══ -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>👤 Account</h2>
+      <button class="modal-close" onclick="closeModal('auth-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('login')">Log In</button>
+        <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
+      </div>
+      <div class="tab-content active" id="tab-login">
+        <div class="form-group"><label>Phone / Email</label><input type="text" id="login-id" placeholder="Your phone or email"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Your password"></div>
+        <button onclick="doLogin(this)" style="width:100%;background:var(--navy);color:#fff;padding:.85rem;border-radius:8px;font-size:.95rem;font-weight:600;margin-top:.5rem">Log In</button>
+        <p style="text-align:center;font-size:.82rem;color:var(--muted);margin-top:1rem"><a role="button" style="color:var(--gold);cursor:pointer" onclick="openPage('forgot')">Forgot password?</a></p>
+      </div>
+      <div class="tab-content" id="tab-register">
+        <div class="form-group"><label>Full Name *</label><input type="text" id="reg-name" placeholder="Your full name"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Phone *</label><input type="tel" id="reg-phone" placeholder="080xxxxxxxx"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@email.com"></div>
+        </div>
+        <div class="form-group"><label>Password *</label><input type="password" id="reg-pass" placeholder="Create a password (6+ chars)"></div>
+        <div class="form-group"><label>Location</label><select id="reg-location"><option value="">Select your state</option><option>Osun State</option><option>Lagos</option><option>Abuja</option><option>Other</option></select></div>
+        <button onclick="doRegister(this)" style="width:100%;background:var(--gold);color:#fff;padding:.85rem;border-radius:8px;font-size:.95rem;font-weight:600;margin-top:.5rem">Create Free Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: MESSAGES (conversations + thread) ═══ -->
+<div class="modal-overlay" id="msg-modal">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-header">
+      <h2 id="msg-title">💬 Messages</h2>
+      <button class="modal-close" onclick="closeMsg()">✕</button>
+    </div>
+    <div class="modal-body" id="msg-body" style="min-height:320px"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: DASHBOARD (My Adverts / Settings / Shop) ═══ -->
+<div class="modal-overlay" id="account-modal">
+  <div class="modal" style="max-width:920px">
+    <div class="modal-header">
+      <h2 id="dash-heading">My Account</h2>
+      <button class="modal-close" onclick="closeModal('account-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="account-body"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: EDIT LISTING ═══ -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h2>Edit Listing</h2>
+      <button class="modal-close" onclick="closeModal('edit-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="edit-body"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: PLANS / CHECKOUT ═══ -->
+<div class="modal-overlay" id="plans-modal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <h2 id="plans-title">Choose how to post</h2>
+      <button class="modal-close" onclick="closeModal('plans-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="plans-body"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: VIEW LISTING ═══ -->
+<div class="modal-overlay" id="view-modal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <h2 id="view-title">Listing Detail</h2>
+      <button class="modal-close" onclick="closeModal('view-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="view-body"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// WELLS MARKETPLACE — front-end (talks to WordPress plugin)
+// ══════════════════════════════════════════════════════════
+// All data now lives in WordPress at wellshome.ng. This file
+// only handles the screen + sending/receiving from the API.
+// ══════════════════════════════════════════════════════════
+
+// >>> If your WordPress is on a different domain, change this:
+const API = 'https://wellshome.ng/wp-json/wells/v1';
+
+// >>> Your Paystack PUBLIC key (safe to expose). Leave blank to disable Paystack.
+const PAYSTACK_PUBLIC_KEY = ''; // e.g. 'pk_live_xxxxx'
+// >>> Your Flutterwave PUBLIC key (safe to expose). Leave blank to disable Flutterwave.
+const FLW_PUBLIC_KEY = ''; // e.g. 'FLWPUBK-xxxxx'
+
+// ── session state ──
+let listings = [];
+let savedIds = JSON.parse(localStorage.getItem('wells_saved') || '[]');
+let currentFilter = 'all';
+let token = localStorage.getItem('wells_token') || '';
+let me = JSON.parse(localStorage.getItem('wells_user') || 'null');
+let pendingPhotos = [];          // [{id, url}] uploaded photos for the new ad
+let activeThread = null;         // {listingId, otherId, otherName}
+let msgPoll = null;
+
+const SUBCATS = {
+  property:['House','Apartment/Flat','Land','Commercial','Short Let'],
+  vehicles:['Cars','Motorcycles','Trucks','Buses','Spare Parts'],
+  electronics:['Phones','Laptops','TVs','Cameras','Audio'],
+  appliances:['Refrigerators','Washing Machines','Air Conditioners','Generators','Cookers'],
+  furniture:['Sofas','Beds','Tables','Wardrobes','Office Furniture'],
+  fashion:['Men Clothing','Women Clothing','Shoes','Bags','Accessories'],
+  other:['Baby Items','Sports','Books','Musical Instruments','Other']
+};
+const catEmojis={property:'🏠',vehicles:'🚗',electronics:'📱',appliances:'🧊',furniture:'🛋',fashion:'👗',other:'📦'};
+
+// ── Category-specific field schemas (Jiji-style) ──
+// type: select | text | number ; icon fields appear in the detail icon-row.
+const CAT_FIELDS = {
+  property:[
+    {key:'subtype',label:'Subtype',type:'select',opts:['Bungalow','Duplex','Detached','Semi-Detached','Flat/Apartment','Land','Commercial','Self Contain']},
+    {key:'bedrooms',label:'Bedrooms',type:'number',icon:'🛏'},
+    {key:'bathrooms',label:'Bathrooms',type:'number',icon:'🛁'},
+    {key:'toilets',label:'Toilets',type:'number'},
+    {key:'size',label:'Property Size (sqm)',type:'number'},
+    {key:'furnishing',label:'Furnishing',type:'select',opts:['Furnished','Semi-Furnished','Unfurnished']},
+    {key:'estate',label:'Estate Name',type:'text'},
+    {key:'address',label:'Property Address',type:'text'},
+    {key:'parking',label:'Parking Space',type:'select',opts:['Yes','No']},
+    {key:'facilities',label:'Facilities (comma separated)',type:'text'},
+  ],
+  vehicles:[
+    {key:'make',label:'Make',type:'text',icon:'🚗'},
+    {key:'model',label:'Model',type:'text'},
+    {key:'year',label:'Year of Manufacture',type:'number',icon:'📅'},
+    {key:'mileage',label:'Mileage (km)',type:'number',icon:'🛞'},
+    {key:'transmission',label:'Transmission',type:'select',opts:['Automatic','Manual']},
+    {key:'fuel',label:'Fuel Type',type:'select',opts:['Petrol','Diesel','Hybrid','Electric']},
+    {key:'bodytype',label:'Body Type',type:'select',opts:['Sedan','SUV','Hatchback','Pickup','Bus','Truck','Coupe']},
+    {key:'color',label:'Color',type:'text'},
+  ],
+  electronics:[
+    {key:'type',label:'Type',type:'select',opts:['Phone','Laptop','TV','Camera','Audio','Accessory','Other']},
+    {key:'brand',label:'Brand',type:'text',icon:'🏷'},
+    {key:'model',label:'Model',type:'text'},
+    {key:'storage',label:'Storage / Capacity',type:'text',icon:'💾'},
+    {key:'color',label:'Color',type:'text'},
+    {key:'warranty',label:'Warranty',type:'select',opts:['Yes','No']},
+  ],
+  appliances:[
+    {key:'type',label:'Type',type:'select',opts:['Refrigerator','Washing Machine','Air Conditioner','Generator','Cooker','Microwave','Other']},
+    {key:'brand',label:'Brand',type:'text',icon:'🏷'},
+    {key:'model',label:'Model',type:'text'},
+    {key:'power',label:'Power / Capacity',type:'text',icon:'⚡'},
+    {key:'warranty',label:'Warranty',type:'select',opts:['Yes','No']},
+  ],
+  furniture:[
+    {key:'type',label:'Type',type:'select',opts:['Sofa','Bed','Table','Wardrobe','Chair','Office Furniture','Other']},
+    {key:'material',label:'Material',type:'text',icon:'🪵'},
+    {key:'color',label:'Color',type:'text'},
+    {key:'dimensions',label:'Dimensions',type:'text'},
+  ],
+  fashion:[
+    {key:'type',label:'Type',type:'select',opts:['Clothing','Shoes','Bag','Watch','Accessory','Jewellery']},
+    {key:'gender',label:'Gender',type:'select',opts:['Men','Women','Unisex','Kids'],icon:'👤'},
+    {key:'brand',label:'Brand',type:'text',icon:'🏷'},
+    {key:'size',label:'Size',type:'text',icon:'📏'},
+    {key:'color',label:'Color',type:'text'},
+    {key:'material',label:'Material',type:'text'},
+  ],
+  other:[
+    {key:'type',label:'Type / Category',type:'text',icon:'🏷'},
+    {key:'brand',label:'Brand (if any)',type:'text'},
+  ],
+};
+// Human label for a category key.
+const CAT_LABELS={property:'Property',vehicles:'Vehicles',electronics:'Electronics',appliances:'Appliances',furniture:'Furniture',fashion:'Fashion',other:'Other'};
+
+// ══════════════════════════════
+// API HELPER
+// ══════════════════════════════
+async function api(path, opts = {}){
+  opts.headers = opts.headers || {};
+  if(token) opts.headers['X-Wells-Token'] = token;
+  if(opts.body && !(opts.body instanceof FormData)){
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(opts.body);
+  }
+  // Tell the browser/host never to serve a cached copy of the API response.
+  opts.cache = 'no-store';
+  const method = (opts.method || 'GET').toUpperCase();
+  // Cache-buster for GETs so a stale response can never be reused.
+  let url = API + path;
+  if(method === 'GET'){
+    url += (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
+  }
+
+  // Retry transient network failures (the intermittent "Failed to fetch").
+  const maxAttempts = (method === 'GET') ? 3 : 2;
+  let lastErr;
+  for(let attempt = 1; attempt <= maxAttempts; attempt++){
+    try{
+      const controller = new AbortController();
+      const timer = setTimeout(()=>controller.abort(), 15000);
+      const res = await fetch(url, {...opts, signal: controller.signal});
+      clearTimeout(timer);
+      let data = null;
+      try { data = await res.json(); } catch(e){}
+      if(!res.ok){
+        const msg = (data && (data.message || data.error)) || ('Request failed ('+res.status+')');
+        const err = new Error(msg); err.status = res.status;
+        // Don't retry real HTTP errors (401, 404, etc.) — only network failures.
+        throw err;
+      }
+      return data;
+    }catch(e){
+      lastErr = e;
+      // Only retry genuine network/abort errors, not HTTP status errors.
+      const isNetwork = (e.name === 'TypeError') || (e.name === 'AbortError');
+      if(!isNetwork || attempt === maxAttempts) throw e;
+      await new Promise(r=>setTimeout(r, 400 * attempt)); // backoff
+    }
+  }
+  throw lastErr;
+}
+
+// ══════════════════════════════
+// FORMAT
+// ══════════════════════════════
+function fmtPrice(p){
+  p = Number(p)||0;
+  if(p>=1000000)return'₦'+(p/1000000).toFixed(1)+'M';
+  if(p>=1000)return'₦'+(p/1000).toFixed(0)+'K';
+  return'₦'+p.toLocaleString();
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+// Scroll to top (used by logo/footer category links).
+function scrollTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+
+// Keep the address bar clean: remove a bare "#" if one ends up there.
+(function cleanHash(){
+  if(location.hash==='#' || location.hash===''){
+    if(location.href.endsWith('#')){
+      history.replaceState(null,'',location.pathname+location.search);
+    }
+  }
+})();
+window.addEventListener('hashchange',function(){
+  if(location.hash==='' || location.hash==='#'){
+    history.replaceState(null,'',location.pathname+location.search);
+  }
+});
+
+// ══════════════════════════════
+// COMPANY PAGES (About, Safety, Contact, Privacy, Terms)
+// ══════════════════════════════
+const PAGES = {
+  about: { title: 'About Wells', html: `
+    <h3>Nigeria's Freshest Marketplace</h3>
+    <p>Wells is an online marketplace by <strong>Wellshome Properties LTD</strong>, built to help Nigerians buy, sell and list anything — properties, vehicles, electronics, appliances, furniture, fashion and more — quickly, safely and for free.</p>
+    <h3>Our Mission</h3>
+    <p>We connect genuine buyers and sellers across Nigeria in one trusted place. Whether you're selling a single item or running a full shop, Wells gives you the tools to reach real customers without paying to list.</p>
+    <h3>Why Wells?</h3>
+    <ul>
+      <li><strong>Free to list</strong> — post your ads at no cost.</li>
+      <li><strong>Direct chat</strong> — message buyers and sellers right inside the app.</li>
+      <li><strong>Your own shop</strong> — every seller gets a public shop page.</li>
+      <li><strong>Verified & local</strong> — proudly based in Osogbo, Osun State, serving all of Nigeria.</li>
+    </ul>
+    <p>Wells is a product of Wellshome Properties LTD, a CAC-registered company.</p>
+  `},
+  safety: { title: 'Safety Tips', html: `
+    <h3>Stay Safe on Wells</h3>
+    <p>Your safety matters to us. Please follow these tips when buying or selling.</p>
+    <h3>For Buyers</h3>
+    <ul>
+      <li>It's safer not to pay ahead before inspecting an item.</li>
+      <li>Ask a friend or someone you trust to accompany you for viewings.</li>
+      <li>Inspect the item in person to ensure it meets your expectations.</li>
+      <li>Meet in a safe, public place during daytime where possible.</li>
+      <li>Verify that account details belong to the right owner before making any payment.</li>
+    </ul>
+    <h3>For Sellers</h3>
+    <ul>
+      <li>Confirm payment has fully cleared before handing over an item.</li>
+      <li>Be cautious of buyers who offer to overpay or rush the deal.</li>
+      <li>Never share your password or banking PINs with anyone.</li>
+    </ul>
+    <h3>Report Abuse</h3>
+    <p>If you come across a suspicious listing or user, contact us at <a href="mailto:info@wellshome.ng">info@wellshome.ng</a> or via WhatsApp on <a href="https://wa.me/2347088126815">0708 812 6815</a>.</p>
+  `},
+  contact: { title: 'Contact Us', html: `
+    <h3>Get in Touch</h3>
+    <p>We'd love to hear from you. Reach the Wells team through any of the channels below.</p>
+    <div class="page-contact-card">
+      <div class="row">📱 <span><strong>WhatsApp:</strong> <a href="https://wa.me/2347088126815">0708 812 6815</a></span></div>
+      <div class="row">✉️ <span><strong>Email:</strong> <a href="mailto:info@wellshome.ng">info@wellshome.ng</a></span></div>
+      <div class="row">🌐 <span><strong>Website:</strong> <a href="https://wellshome.ng" target="_blank" rel="noopener">wellshome.ng</a></span></div>
+      <div class="row">📍 <span><strong>Address:</strong> Osogbo, Osun State, Nigeria</span></div>
+    </div>
+    <p>Our team typically replies within a day. For the fastest response, message us on WhatsApp.</p>
+  `},
+  privacy: { title: 'Privacy Policy', html: `
+    <h3>Privacy Policy</h3>
+    <p>This policy explains how Wells (a product of Wellshome Properties LTD) collects and uses your information.</p>
+    <h3>Information We Collect</h3>
+    <ul>
+      <li>Account details you provide: name, phone number, email and location.</li>
+      <li>Listings you create, including photos and descriptions.</li>
+      <li>Messages you exchange with other users through the app.</li>
+    </ul>
+    <h3>How We Use It</h3>
+    <ul>
+      <li>To create and manage your account and listings.</li>
+      <li>To let buyers and sellers contact each other.</li>
+      <li>To send you important notifications about your account and ads.</li>
+      <li>To send occasional announcements (you can unsubscribe at any time).</li>
+    </ul>
+    <h3>Sharing</h3>
+    <p>We do not sell your personal data. Your contact details are only shared with other users when you choose to share them (for example, by chatting or showing your contact on a listing).</p>
+    <h3>Your Rights</h3>
+    <p>You can edit your details, delete your listings, or request account deletion at any time by contacting <a href="mailto:info@wellshome.ng">info@wellshome.ng</a>.</p>
+    <p style="font-size:.82rem;color:var(--muted)">Last updated: ${new Date().getFullYear()}.</p>
+  `},
+  terms: { title: 'Terms of Use', html: `
+    <h3>Terms of Use</h3>
+    <p>By using Wells you agree to these terms. Please read them carefully.</p>
+    <h3>Using Wells</h3>
+    <ul>
+      <li>You must provide accurate information about yourself and your listings.</li>
+      <li>You are responsible for the items you list and the content you post.</li>
+      <li>You must not post illegal, counterfeit, stolen, or prohibited items.</li>
+      <li>You must not harass other users or post misleading information.</li>
+    </ul>
+    <h3>Listings</h3>
+    <p>Wells is a platform that connects buyers and sellers. We are not a party to any transaction and do not guarantee the quality, safety, or legality of items listed. Always follow our Safety Tips.</p>
+    <h3>Accounts</h3>
+    <p>Keep your password secure. You are responsible for activity under your account. We may suspend accounts that violate these terms.</p>
+    <h3>Liability</h3>
+    <p>Wells and Wellshome Properties LTD are not liable for losses arising from transactions between users. Deals are made at your own discretion.</p>
+    <h3>Contact</h3>
+    <p>Questions about these terms? Email <a href="mailto:info@wellshome.ng">info@wellshome.ng</a>.</p>
+    <p style="font-size:.82rem;color:var(--muted)">Last updated: ${new Date().getFullYear()}.</p>
+  `},
+};
+
+function openPage(key){
+  const page=PAGES[key];
+  if(!page)return;
+  document.getElementById('page-title').textContent=page.title;
+  document.getElementById('page-content').innerHTML=page.html;
+  document.getElementById('page-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  window.scrollTo(0,0);
+}
+function closePage(){
+  document.getElementById('page-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ══════════════════════════════
+// LOAD LISTINGS (from server)
+// ══════════════════════════════
+async function loadListings(){
+  try{
+    const params = new URLSearchParams();
+    if(currentFilter!=='all') params.set('cat',currentFilter);
+    const loc=document.getElementById('filter-location'); if(loc&&loc.value)params.set('location',loc.value);
+    const cond=document.getElementById('filter-condition'); if(cond&&cond.value)params.set('condition',cond.value);
+    const sort=document.getElementById('filter-sort'); if(sort&&sort.value)params.set('sort',sort.value);
+    const data = await api('/listings?'+params.toString());
+    listings = data.listings || [];
+    renderListings(listings);
+    updateStats();
+    updateCatCounts();
+  }catch(e){
+    const grid=document.getElementById('listings-grid');
+    const empty=document.getElementById('empty-state');
+    if(empty)empty.style.display='none';
+    if(grid){
+      grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">
+        <div style="font-size:2rem;margin-bottom:.5rem">📡</div>
+        <div style="font-weight:600;color:var(--text2);margin-bottom:.5rem">Couldn't load listings</div>
+        <div style="font-size:.85rem;margin-bottom:1rem">Check your connection and try again.</div>
+        <button class="btn-sell" onclick="loadListings()" style="padding:.6rem 1.5rem">Retry</button>
+      </div>`;
+    }
+  }
+}
+
+// ══════════════════════════════
+// RENDER
+// ══════════════════════════════
+function renderListings(items){
+  const grid=document.getElementById('listings-grid');
+  const empty=document.getElementById('empty-state');
+  const countEl=document.getElementById('listing-count');
+  if(!items.length){grid.innerHTML='';empty.style.display='block';countEl.textContent='0 items';return}
+  empty.style.display='none';
+  countEl.textContent=items.length+' item'+(items.length!==1?'s':'');
+  grid.innerHTML=items.map(item=>{
+    const isSaved=savedIds.includes(item.id);
+    const img=item.image?`<img src="${esc(item.image)}" alt="${esc(item.title)}">`:`<span style="font-size:3rem">${item.emoji||'📦'}</span>`;
+    const badge=item.featured?'<span class="badge badge-featured">Featured</span>':item.condition==='new'?'<span class="badge badge-new">New</span>':'<span class="badge badge-used">Used</span>';
+    return`<div class="listing-card" onclick="viewListing('${item.id}')">
+      <div class="listing-img">${img}${badge}
+        <button class="save-btn ${isSaved?'saved':''}" onclick="event.stopPropagation();toggleSave('${item.id}',this)" title="Save">${isSaved?'♥':'♡'}</button>
+      </div>
+      <div class="listing-body">
+        <div class="listing-price">${fmtPrice(item.price)}${item.negotiable?'<small>neg.</small>':''}</div>
+        <div class="listing-title">${esc(item.title)}</div>
+        ${cardPills(item)}
+        <div class="listing-meta">
+          <span class="listing-location">📍 ${esc(item.location)}</span>
+          <span class="listing-time">${esc(item.time)}</span>
+        </div>
+      </div>
+      <div class="listing-footer">
+        <button class="btn-wa" onclick="event.stopPropagation();messageSeller('${item.id}')">💬 Message</button>
+        <button class="btn-view" onclick="event.stopPropagation();viewListing('${item.id}')">View →</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Build the small attribute pills shown on each card (e.g. "500 sqm", "4 bedrooms").
+function cardPills(item){
+  const a=item.attributes||{};
+  const cat=item.cat;
+  const pills=[];
+  if(cat==='property'){
+    if(a.size) pills.push(a.size+' sqm');
+    if(a.bedrooms) pills.push(a.bedrooms+' bed'+(a.bedrooms==1?'':'s'));
+    if(a.subtype) pills.push(a.subtype);
+  }else if(cat==='vehicles'){
+    if(a.year) pills.push(a.year);
+    if(a.mileage) pills.push(Number(a.mileage).toLocaleString()+' km');
+    if(a.transmission) pills.push(a.transmission);
+  }else if(cat==='electronics'||cat==='appliances'){
+    if(a.brand) pills.push(a.brand);
+    if(a.storage) pills.push(a.storage);
+    if(a.power) pills.push(a.power);
+  }else{
+    if(a.brand) pills.push(a.brand);
+    if(a.type) pills.push(a.type);
+    if(a.size) pills.push(a.size);
+  }
+  if(!pills.length)return '';
+  return `<div class="card-pills">${pills.slice(0,3).map(p=>`<span class="card-pill">${esc(p)}</span>`).join('')}</div>`;
+}
+
+// ══════════════════════════════
+// FILTERS / SEARCH  (now hit the server)
+// ══════════════════════════════
+function filterCat(cat,btn){
+  currentFilter=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const labels={all:'All',property:'Property',vehicles:'Vehicles',electronics:'Electronics',appliances:'Appliances',furniture:'Furniture',fashion:'Fashion',other:'Other'};
+  document.getElementById('listings-title').innerHTML=`${labels[cat]||'All'} <span>Listings</span>`;
+  loadListings();
+}
+
+// ══════════════════════════════
+// BOTTOM NAV (mobile tabs)
+// ══════════════════════════════
+function setActiveTab(tab){
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+}
+function navTab(tab){
+  // Tabs that open existing flows don't change the "current page" highlight permanently.
+  if(tab==='sell'){ openSell(); return; }
+  if(tab==='messages'){ setActiveTab('messages'); openMessages(); return; }
+  if(tab==='profile'){ setActiveTab('profile'); openDashboard('adverts'); return; }
+  if(tab==='saved'){ setActiveTab('saved'); showSaved(); return; }
+  // home
+  setActiveTab('home');
+  // close any open modals/pages and return to the listings
+  ['view-modal','msg-modal','account-modal','plans-modal','sell-modal','edit-modal'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('open');});
+  const po=document.getElementById('page-overlay'); if(po)po.classList.remove('open');
+  document.body.style.overflow='';
+  currentFilter='all';
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  const allBtn=document.querySelector('.cat-btn'); if(allBtn)allBtn.classList.add('active');
+  document.getElementById('listings-title').innerHTML='All <span>Listings</span>';
+  loadListings();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Saved / favourites view: show only listings the user has hearted.
+async function showSaved(){
+  document.getElementById('listings-title').innerHTML='Saved <span>Items</span>';
+  const grid=document.getElementById('listings-grid');
+  const empty=document.getElementById('empty-state');
+  if(empty)empty.style.display='none';
+  if(grid)grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1.5rem;color:var(--muted)">Loading saved items…</div>';
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(!savedIds.length){
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--muted)">
+      <div style="font-size:2.5rem;margin-bottom:.5rem">🔖</div>
+      <div style="font-weight:600;color:var(--text2);margin-bottom:.35rem">No saved items yet</div>
+      <div style="font-size:.85rem">Tap the heart on any listing to save it here.</div></div>`;
+    document.getElementById('listing-count').textContent='0 items';
+    return;
+  }
+  try{
+    // Pull a broad set and filter to saved ids (works without a dedicated endpoint).
+    const data=await api('/listings?per_page=100');
+    const all=data.listings||[];
+    const saved=all.filter(l=>savedIds.includes(l.id));
+    listings=saved; // so viewListing can find them
+    renderListings(saved);
+    if(!saved.length){
+      grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--muted)">
+        <div style="font-size:2.5rem;margin-bottom:.5rem">🔖</div>
+        <div style="font-weight:600;color:var(--text2)">Your saved items are no longer available</div></div>`;
+    }
+  }catch(e){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">Could not load saved items. <button class="btn-sell" onclick="showSaved()" style="margin-top:.5rem;padding:.5rem 1.2rem">Retry</button></div>';
+  }
+}
+function applyFilters(){ loadListings(); }
+function resetFilters(){
+  document.getElementById('filter-location').value='';
+  document.getElementById('filter-condition').value='';
+  document.getElementById('filter-sort').value='newest';
+  loadListings();
+}
+async function doSearch(){
+  const q=document.getElementById('search-input').value;
+  const cat=document.getElementById('search-cat').value;
+  const params=new URLSearchParams();
+  if(q)params.set('q',q);
+  if(cat)params.set('cat',cat);
+  try{
+    const data=await api('/listings?'+params.toString());
+    listings=data.listings||[];
+    renderListings(listings);
+    showNotif(`Found ${listings.length} result${listings.length!==1?'s':''}`);
+  }catch(e){showNotif(e.message);}
+}
+document.getElementById('search-input').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
+
+// ══════════════════════════════
+// VIEW LISTING
+// ══════════════════════════════
+let galleryState = { images: [], index: 0, emoji: '📦' };
+
+// Build the Jiji-style spec block: icon row + labelled grid + Show more.
+function buildSpecBlock(item){
+  const cat=item.cat;
+  const schema=CAT_FIELDS[cat]||[];
+  const attrs=item.attributes||{};
+  // Always include condition as a field.
+  const rows=[];
+  // Icon row: fields flagged with an icon AND having a value.
+  const iconFields=schema.filter(f=>f.icon && attrs[f.key]);
+  let iconRow='';
+  if(iconFields.length){
+    iconRow=`<div class="spec-icons">${iconFields.slice(0,3).map(f=>`
+      <div class="spec-icon"><div class="spec-icon-emoji">${f.icon}</div><div class="spec-icon-val">${esc(attrs[f.key])}</div></div>
+    `).join('')}</div>`;
+  }
+  // Labelled grid: every attribute with a value, plus condition.
+  schema.forEach(f=>{ if(attrs[f.key]) rows.push([f.label,attrs[f.key]]); });
+  if(item.condition) rows.push(['Condition', item.condition.charAt(0).toUpperCase()+item.condition.slice(1)]);
+  if(!rows.length && !iconRow) return '';
+  const visible=rows.slice(0,4);
+  const hidden=rows.slice(4);
+  const cell=(pair)=>`<div class="spec-cell"><div class="spec-val">${esc(pair[1])}</div><div class="spec-label">${esc(pair[0])}</div></div>`;
+  return `
+    <div class="spec-block">
+      ${iconRow}
+      <div class="spec-grid" id="spec-visible">${visible.map(cell).join('')}</div>
+      ${hidden.length?`<div class="spec-grid" id="spec-hidden" style="display:none">${hidden.map(cell).join('')}</div>
+      <button class="spec-more" onclick="toggleSpecMore(this)">Show more ▾</button>`:''}
+    </div>`;
+}
+function toggleSpecMore(btn){
+  const h=document.getElementById('spec-hidden');
+  if(!h)return;
+  const open=h.style.display!=='none';
+  h.style.display=open?'none':'grid';
+  btn.textContent=open?'Show more ▾':'Show less ▴';
+}
+
+function viewListing(id){
+  const item=listings.find(l=>l.id===id);
+  if(!item)return;
+  document.getElementById('view-title').textContent=item.title;
+
+  // Gather all photos (fall back to single image, then emoji).
+  const imgs = (item.images && item.images.length) ? item.images : (item.image ? [item.image] : []);
+  galleryState = { images: imgs, index: 0, emoji: item.emoji || '📦' };
+
+  const waLink=`https://wa.me/234${(item.phone||'').replace(/^0/,'').replace(/\s/g,'')}?text=${encodeURIComponent('Hello, I am interested in "'+item.title+'" on Wells.')}`;
+
+  document.getElementById('view-body').innerHTML=`
+    <div class="gallery">
+      <div class="gallery-main" id="gallery-main"></div>
+      ${imgs.length>1?`
+        <button class="gallery-nav prev" onclick="galleryMove(-1)" aria-label="Previous">‹</button>
+        <button class="gallery-nav next" onclick="galleryMove(1)" aria-label="Next">›</button>`:''}
+      ${imgs.length?`<div class="gallery-counter">📷 <span id="gallery-count">1/${imgs.length}</span></div>`:''}
+    </div>
+    ${imgs.length>1?`<div class="gallery-thumbs" id="gallery-thumbs"></div>`:''}
+    <div style="padding:1.25rem 0">
+      <div class="detail-price-row">
+        <div>
+          <div class="detail-price">${fmtPrice(item.price)}</div>
+          ${item.marketValue?`<div style="font-size:.8rem;color:var(--muted);text-decoration:line-through;margin-top:2px">Market value: ${fmtPrice(item.marketValue)}</div>`:''}
+        </div>
+        ${item.negotiable?'<span class="neg-tag">Negotiable</span>':''}
+      </div>
+      <div style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem">${esc(item.title)}</div>
+      <div style="font-size:.8rem;color:var(--muted);margin-bottom:.75rem;display:flex;gap:1rem;flex-wrap:wrap">
+        <span>📍 ${esc(item.location)}</span><span>🏷 ${esc(CAT_LABELS[item.cat]||item.cat)}</span>
+        <span>🕐 ${esc(item.time)}</span>
+      </div>
+      ${buildSpecBlock(item)}
+      ${item.features&&item.features.length?`<div class="detail-tags">${item.features.map(f=>`<span class="detail-tag">✓ ${esc(f)}</span>`).join('')}</div>`:''}
+      <div class="seller-card" style="cursor:pointer" onclick="viewSeller(${item.sellerId})">
+        <div class="seller-avatar">${esc((item.seller||'?').charAt(0))}</div>
+        <div style="flex:1"><div class="seller-name">${esc(item.seller)}</div><div class="seller-meta">${esc(item.location)} · View shop →</div></div>
+        ${item.verified?'<span class="verified">✓ Verified</span>':''}
+      </div>
+      <div class="detail-section"><h4>Description</h4><p>${esc(item.desc)}</p></div>
+      <div class="detail-cta">
+        <button class="btn-wa" style="flex:1;padding:.85rem" onclick="messageSeller('${item.id}')">💬 Message Seller</button>
+        <a href="${waLink}" class="btn-wa" target="_blank" rel="noopener" style="flex:1;padding:.85rem;background:var(--wa)">WhatsApp</a>
+        <button onclick="closeModal('view-modal')" class="btn-view" style="flex:1;padding:.85rem">Close</button>
+      </div>
+      <div class="safety-tip">🛡 Tip: Always inspect the item before paying. Meet in a safe, public place.</div>
+    </div>`;
+  renderGallery();
+  openModal('view-modal');
+  // Count the view (fire-and-forget).
+  api('/listings/'+id+'/view',{method:'POST'}).catch(()=>{});
+}
+
+function renderGallery(){
+  const main=document.getElementById('gallery-main');
+  if(!main)return;
+  const {images,index,emoji}=galleryState;
+  if(!images.length){ main.innerHTML=`<span class="emoji-fallback">${emoji}</span>`; return; }
+  main.innerHTML=`<img src="${esc(images[index])}" alt="photo ${index+1}" style="cursor:zoom-in" onclick="openLightbox(${index})">`;
+  const count=document.getElementById('gallery-count');
+  if(count)count.textContent=(index+1)+'/'+images.length;
+  const thumbs=document.getElementById('gallery-thumbs');
+  if(thumbs){
+    thumbs.innerHTML=images.map((src,i)=>`
+      <div class="gallery-thumb ${i===index?'active':''}" onclick="galleryGo(${i})">
+        <img src="${esc(src)}" alt="thumb ${i+1}">
+      </div>`).join('');
+    const act=thumbs.querySelector('.gallery-thumb.active');
+    if(act)act.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+  }
+}
+function galleryMove(dir){
+  const n=galleryState.images.length; if(!n)return;
+  galleryState.index=(galleryState.index+dir+n)%n;
+  renderGallery();
+}
+function galleryGo(i){ galleryState.index=i; renderGallery(); }
+
+// ── Fullscreen image lightbox (zoom + swipe) ──
+let lightboxIndex=0;
+function openLightbox(i){
+  if(!galleryState.images.length)return;
+  lightboxIndex=i!=null?i:galleryState.index;
+  const lb=document.getElementById('lightbox');
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+  renderLightbox();
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+function lightboxMove(dir){
+  const n=galleryState.images.length; if(!n)return;
+  lightboxIndex=(lightboxIndex+dir+n)%n;
+  renderLightbox();
+  // keep the inline gallery in sync
+  galleryState.index=lightboxIndex; renderGallery();
+}
+function renderLightbox(){
+  const imgs=galleryState.images;
+  const img=document.getElementById('lightbox-img');
+  const cnt=document.getElementById('lightbox-count');
+  if(img){ img.src=imgs[lightboxIndex]; img.style.transform='scale(1)'; img.dataset.zoomed='0'; }
+  if(cnt)cnt.textContent=(lightboxIndex+1)+' / '+imgs.length;
+  const prev=document.getElementById('lb-prev'), next=document.getElementById('lb-next');
+  if(prev)prev.style.display=imgs.length>1?'flex':'none';
+  if(next)next.style.display=imgs.length>1?'flex':'none';
+}
+function toggleLightboxZoom(e){
+  const img=document.getElementById('lightbox-img');
+  if(!img)return;
+  const zoomed=img.dataset.zoomed==='1';
+  img.dataset.zoomed=zoomed?'0':'1';
+  img.style.transform=zoomed?'scale(1)':'scale(2.2)';
+  img.style.cursor=zoomed?'zoom-in':'zoom-out';
+  if(e)e.stopPropagation();
+}
+// Swipe support for the lightbox.
+function initLightboxSwipe(){
+  const lb=document.getElementById('lightbox');
+  if(!lb)return;
+  let startX=0,startY=0,moved=false;
+  lb.addEventListener('touchstart',ev=>{const t=ev.changedTouches[0];startX=t.clientX;startY=t.clientY;moved=false;},{passive:true});
+  lb.addEventListener('touchmove',()=>{moved=true;},{passive:true});
+  lb.addEventListener('touchend',ev=>{
+    const t=ev.changedTouches[0];
+    const dx=t.clientX-startX, dy=t.clientY-startY;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){
+      lightboxMove(dx<0?1:-1);
+    }
+  },{passive:true});
+}
+// Keyboard arrows / escape for the lightbox.
+document.addEventListener('keydown',ev=>{
+  const lb=document.getElementById('lightbox');
+  if(!lb||!lb.classList.contains('open'))return;
+  if(ev.key==='ArrowLeft')lightboxMove(-1);
+  else if(ev.key==='ArrowRight')lightboxMove(1);
+  else if(ev.key==='Escape')closeLightbox();
+});
+
+// ══════════════════════════════
+// SAVE (kept local — favourites)
+// ══════════════════════════════
+function toggleSave(id,btn){
+  if(savedIds.includes(id)){savedIds=savedIds.filter(s=>s!==id);btn.textContent='♡';btn.classList.remove('saved');showNotif('Removed from saved')}
+  else{savedIds.push(id);btn.textContent='♥';btn.classList.add('saved');showNotif('Saved to favourites')}
+  localStorage.setItem('wells_saved',JSON.stringify(savedIds));
+}
+
+// ══════════════════════════════
+// AUTH
+// ══════════════════════════════
+function isLoggedIn(){ return !!token && !!me; }
+
+function navAccount(){
+  if(isLoggedIn()) openDashboard('adverts');
+  else openModal('auth-modal');
+}
+
+async function doLogin(btn){
+  const identifier=document.getElementById('login-id').value.trim();
+  const password=document.getElementById('login-pass').value;
+  if(!identifier||!password){showNotif('Enter your phone/email and password');return;}
+  btn.disabled=true;btn.textContent='Logging in…';
+  try{
+    const data=await api('/login',{method:'POST',body:{identifier,password}});
+    setSession(data.token,data.user);
+    closeModal('auth-modal');
+    showNotif('Welcome back, '+data.user.name+'!');
+  }catch(e){showNotif(e.message);}
+  btn.disabled=false;btn.textContent='Log In';
+}
+
+async function doRegister(btn){
+  const name=document.getElementById('reg-name').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const password=document.getElementById('reg-pass').value;
+  const location=document.getElementById('reg-location').value;
+  if(!name||!phone||password.length<6){showNotif('Name, phone and a 6+ char password are required');return;}
+  btn.disabled=true;btn.textContent='Creating…';
+  try{
+    const data=await api('/register',{method:'POST',body:{name,phone,email,password,location}});
+    setSession(data.token,data.user);
+    closeModal('auth-modal');
+    showNotif('Account created! Welcome to Wells 🎉');
+  }catch(e){showNotif(e.message);}
+  btn.disabled=false;btn.textContent='Create Free Account';
+}
+
+function setSession(t,u){
+  token=t; me=u;
+  localStorage.setItem('wells_token',t);
+  localStorage.setItem('wells_user',JSON.stringify(u));
+  refreshAuthUI();
+  pollUnread();
+}
+function logout(){
+  token=''; me=null;
+  localStorage.removeItem('wells_token');
+  localStorage.removeItem('wells_user');
+  refreshAuthUI();
+  closeModal('account-modal');
+  closeProfileMenu();
+  showNotif('Logged out');
+}
+function refreshAuthUI(){
+  const login=document.getElementById('nav-login-btn');
+  const menu=document.getElementById('profile-menu');
+  const msgs=document.getElementById('nav-msgs-btn');
+  if(isLoggedIn()){
+    login.style.display='none';
+    menu.style.display='';
+    msgs.style.display='';
+    document.getElementById('nav-name').textContent=(me.name||'').split(' ')[0];
+    const av=document.getElementById('nav-avatar');
+    if(me.avatar){ av.innerHTML=`<img src="${esc(me.avatar)}" alt="">`; }
+    else { av.textContent=(me.name||'?').charAt(0).toUpperCase(); }
+  }else{
+    login.style.display='';
+    menu.style.display='none';
+    msgs.style.display='none';
+  }
+}
+
+// ── profile dropdown ──
+function toggleProfileMenu(e){
+  e.stopPropagation();
+  document.getElementById('profile-dropdown').classList.toggle('open');
+}
+function closeProfileMenu(){
+  const d=document.getElementById('profile-dropdown');
+  if(d)d.classList.remove('open');
+}
+document.addEventListener('click',closeProfileMenu);
+
+// ══════════════════════════════
+// DASHBOARD (My Adverts / Settings / Shop)
+// ══════════════════════════════
+let dashTab='adverts';
+let myListingsCache=[];
+
+function openDashboard(tab){
+  closeProfileMenu();
+  if(!isLoggedIn()){openModal('auth-modal');return;}
+  dashTab=tab||'adverts';
+  openModal('account-modal');
+  renderDashboard();
+}
+
+async function renderDashboard(){
+  const body=document.getElementById('account-body');
+  const avatar=me.avatar?`<img src="${esc(me.avatar)}" alt="">`:esc((me.name||'?').charAt(0).toUpperCase());
+  body.innerHTML=`
+    <div class="dash-wrap">
+      <div class="dash-side">
+        <div class="dash-profile">
+          <div class="dash-avatar">${avatar}</div>
+          <div class="dash-name">${esc(me.businessName||me.name)}</div>
+          <div class="dash-phone">${esc(me.phone||me.email||'')}</div>
+        </div>
+        <div class="dash-nav">
+          <button class="${dashTab==='adverts'?'active':''}" onclick="switchDash('adverts')">🗂 My Adverts</button>
+          <button class="${dashTab==='settings'?'active':''}" onclick="switchDash('settings')">⚙ Settings</button>
+          <button onclick="viewMyShop()">🏪 My Shop</button>
+          <button onclick="openMessages()">💬 Messages</button>
+          <button onclick="logout()">↩ Log Out</button>
+        </div>
+      </div>
+      <div id="dash-main"></div>
+    </div>`;
+  document.getElementById('dash-heading').textContent = dashTab==='settings'?'Settings':'My Adverts';
+  if(dashTab==='settings') renderSettings();
+  else renderMyAdverts();
+}
+function switchDash(tab){ dashTab=tab; renderDashboard(); }
+
+async function renderMyAdverts(){
+  const main=document.getElementById('dash-main');
+  main.innerHTML='<p style="color:var(--muted)">Loading your adverts…</p>';
+  try{
+    const data=await api('/my-listings');
+    myListingsCache=data.listings||[];
+    if(!myListingsCache.length){ main.innerHTML='<p style="color:var(--muted)">You have no adverts yet. Tap “+ Post Ad” to create one.</p>'; return; }
+    const active=myListingsCache.filter(l=>l.status==='publish').length;
+    main.innerHTML=`
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem">
+        <span style="color:var(--green);font-weight:600">✓ ${active} Active</span>
+        <span style="color:var(--muted);font-size:.85rem">· ${myListingsCache.length} total</span>
+      </div>
+      ${myListingsCache.map(l=>{
+        const img=l.image?`<img src="${esc(l.image)}" alt="">`:(l.emoji||'📦');
+        const statusCls=l.status==='publish'?'status-live':(l.status==='pending'?'status-pending':'status-closed');
+        const statusTxt=l.status==='publish'?'Active':(l.status==='pending'?'Pending':'Closed');
+        return `<div class="dash-listing">
+          <div class="dash-listing-img">${img}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;color:var(--gold)">${fmtPrice(l.price)}</div>
+            <div style="font-weight:600;margin:.1rem 0">${esc(l.title)} <span class="status-pill ${statusCls}">${statusTxt}</span></div>
+            <div style="font-size:.78rem;color:var(--muted)">📍 ${esc(l.location)} · ${esc(l.time)}</div>
+            <div class="dash-stat-row">
+              <span class="dash-stat">👁 <b>${l.views||0}</b> views</span>
+              <span class="dash-stat">💬 <b>${l.chats||0}</b> chats</span>
+            </div>
+            <div class="dash-actions">
+              <button onclick="openEditListing('${l.id}')">✏ Edit</button>
+              ${l.status==='publish'?`<button onclick="closeListing('${l.id}')">⏸ Close</button>`:''}
+              <button class="danger" onclick="deleteListing('${l.id}')">🗑 Delete</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}`;
+  }catch(e){main.innerHTML='<p>'+esc(e.message)+'</p>';}
+}
+
+function renderSettings(){
+  const main=document.getElementById('dash-main');
+  main.innerHTML=`
+    <h4 style="margin-bottom:1rem">Personal Details</h4>
+    <div class="form-group"><label>Full Name</label><input type="text" id="set-name" value="${esc(me.name||'')}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Phone</label><input type="tel" id="set-phone" value="${esc(me.phone||'')}"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="set-email" value="${esc(me.email||'')}"></div>
+    </div>
+    <div class="form-group"><label>Location</label><input type="text" id="set-location" value="${esc(me.location||'')}" placeholder="e.g. Osogbo, Osun State"></div>
+
+    <h4 style="margin:1.5rem 0 1rem">Business Details</h4>
+    <div class="form-group"><label>Business Name</label><input type="text" id="set-bizname" value="${esc(me.businessName||'')}" placeholder="e.g. Wellshome Properties LTD"></div>
+    <div class="form-group"><label>Business Address</label><input type="text" id="set-bizaddr" value="${esc(me.businessAddress||'')}"></div>
+    <div class="form-group"><label>About Your Business</label><textarea id="set-bizabout" placeholder="Tell buyers about your business...">${esc(me.businessAbout||'')}</textarea></div>
+    <button class="btn-sell" onclick="saveSettings(this)" style="width:100%;padding:.85rem;margin-top:.25rem">Save Changes</button>
+
+    <h4 style="margin:1.5rem 0 1rem">Change Password</h4>
+    <div class="form-group"><label>Current Password</label><input type="password" id="set-curpass" placeholder="Current password"></div>
+    <div class="form-group"><label>New Password</label><input type="password" id="set-newpass" placeholder="New password (6+ chars)"></div>
+    <button class="btn-view" onclick="changePassword(this)" style="width:100%;padding:.85rem;border:1px solid var(--border)">Update Password</button>`;
+}
+
+async function saveSettings(btn){
+  const payload={
+    name:document.getElementById('set-name').value.trim(),
+    phone:document.getElementById('set-phone').value.trim(),
+    email:document.getElementById('set-email').value.trim(),
+    location:document.getElementById('set-location').value.trim(),
+    business_name:document.getElementById('set-bizname').value.trim(),
+    business_address:document.getElementById('set-bizaddr').value.trim(),
+    business_about:document.getElementById('set-bizabout').value.trim(),
+  };
+  btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const data=await api('/profile',{method:'POST',body:payload});
+    me={...me,...data.user};
+    localStorage.setItem('wells_user',JSON.stringify(me));
+    refreshAuthUI();
+    showNotif('Settings saved ✓');
+  }catch(e){showNotif(e.message);}
+  btn.disabled=false;btn.textContent='Save Changes';
+}
+
+async function changePassword(btn){
+  const current=document.getElementById('set-curpass').value;
+  const next=document.getElementById('set-newpass').value;
+  if(!current||next.length<6){showNotif('Enter current password and a 6+ char new password');return;}
+  btn.disabled=true;btn.textContent='Updating…';
+  try{
+    const data=await api('/password',{method:'POST',body:{current_password:current,new_password:next}});
+    if(data.token){ token=data.token; localStorage.setItem('wells_token',token); }
+    document.getElementById('set-curpass').value='';
+    document.getElementById('set-newpass').value='';
+    showNotif('Password updated ✓');
+  }catch(e){showNotif(e.message);}
+  btn.disabled=false;btn.textContent='Update Password';
+}
+
+// ── edit / close / delete listing ──
+function openEditListing(id){
+  const l=myListingsCache.find(x=>x.id===id); if(!l)return;
+  const body=document.getElementById('edit-body');
+  body.innerHTML=`
+    <div class="form-group"><label>Title</label><input type="text" id="edit-title" value="${esc(l.title)}"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Price (₦)</label><input type="number" id="edit-price" value="${l.price}"></div>
+      <div class="form-group"><label>Location</label><input type="text" id="edit-location" value="${esc(l.location)}"></div>
+    </div>
+    <div class="form-group"><label>Condition</label>
+      <select id="edit-condition"><option value="used" ${l.condition==='used'?'selected':''}>Used</option><option value="new" ${l.condition==='new'?'selected':''}>New</option><option value="refurbished" ${l.condition==='refurbished'?'selected':''}>Refurbished</option></select>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="edit-desc">${esc(l.desc)}</textarea></div>
+    <div id="edit-cat-fields"></div>
+    <button class="btn-sell" onclick="saveEdit('${id}',this)" style="width:100%;padding:.85rem">Save Changes</button>`;
+  // Render the category-specific fields prefilled with existing values.
+  renderCatFields(l.cat, l.attributes||{}, 'edit-cat-fields');
+  openModal('edit-modal');
+}
+async function saveEdit(id,btn){
+  const payload={
+    title:document.getElementById('edit-title').value.trim(),
+    price:parseFloat(document.getElementById('edit-price').value)||0,
+    location:document.getElementById('edit-location').value.trim(),
+    condition:document.getElementById('edit-condition').value,
+    desc:document.getElementById('edit-desc').value.trim(),
+    attributes:collectAttributes('edit-cat-fields'),
+  };
+  btn.disabled=true;btn.textContent='Saving…';
+  try{
+    await api('/listings/'+id,{method:'PUT',body:payload});
+    closeModal('edit-modal');
+    showNotif('Listing updated ✓');
+    renderMyAdverts();
+    loadListings();
+  }catch(e){showNotif(e.message);}
+  btn.disabled=false;btn.textContent='Save Changes';
+}
+async function closeListing(id){
+  if(!confirm('Close this advert? It will be hidden from buyers but not deleted. You can contact support to reopen.'))return;
+  // "Close" = set to draft via update is not supported directly; use delete-to-trash semantics.
+  try{ await api('/listings/'+id,{method:'PUT',body:{status:'draft'}}); showNotif('Advert closed'); renderMyAdverts(); loadListings(); }
+  catch(e){showNotif(e.message);}
+}
+async function deleteListing(id){
+  if(!confirm('Permanently delete this listing?'))return;
+  try{ await api('/listings/'+id,{method:'DELETE'}); showNotif('Listing deleted'); renderMyAdverts(); loadListings(); }
+  catch(e){showNotif(e.message);}
+}
+
+// ── public seller shop ──
+function viewMyShop(){ closeProfileMenu(); if(me) viewSeller(me.id); }
+
+async function viewSeller(sellerId){
+  closeModal('account-modal');
+  document.getElementById('view-title').textContent='Seller Shop';
+  const body=document.getElementById('view-body');
+  body.innerHTML='<p style="color:var(--muted);padding:1rem">Loading shop…</p>';
+  openModal('view-modal');
+  try{
+    const data=await api('/seller/'+sellerId);
+    const s=data.seller||{};
+    const avatar=s.avatar?`<img src="${esc(s.avatar)}" alt="">`:esc((s.businessName||s.name||'?').charAt(0).toUpperCase());
+    body.innerHTML=`
+      <div style="text-align:center;padding:1.25rem 0 1rem;border-bottom:1px solid var(--border)">
+        <div class="dash-avatar" style="margin-bottom:.5rem">${avatar}</div>
+        <div style="font-weight:700;font-size:1.2rem">${esc(s.businessName||s.name)}</div>
+        <div style="font-size:.82rem;color:var(--muted)">📍 ${esc(s.location||'')} · Joined ${esc(s.joined||'')}</div>
+        ${s.businessAbout?`<p style="font-size:.85rem;color:var(--text2);max-width:460px;margin:.75rem auto 0;line-height:1.6">${esc(s.businessAbout)}</p>`:''}
+        ${s.businessAddress?`<div style="font-size:.8rem;color:var(--muted);margin-top:.5rem">🏢 ${esc(s.businessAddress)}</div>`:''}
+      </div>
+      <h4 style="margin:1.1rem 0 .75rem">${data.count} Listing${data.count!==1?'s':''}</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.75rem">
+        ${(data.listings||[]).map(l=>{
+          const img=l.image?`<img src="${esc(l.image)}" style="width:100%;height:110px;object-fit:cover;border-radius:8px">`:`<div style="height:110px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:var(--off);border-radius:8px">${l.emoji||'📦'}</div>`;
+          return `<div style="cursor:pointer" onclick="viewListing('${l.id}')">
+            ${img}
+            <div style="font-weight:700;color:var(--gold);font-size:.9rem;margin-top:.35rem">${fmtPrice(l.price)}</div>
+            <div style="font-size:.8rem;line-height:1.3">${esc(l.title)}</div>
+          </div>`;
+        }).join('') || '<p style="color:var(--muted)">No active listings.</p>'}
+      </div>`;
+  }catch(e){body.innerHTML='<p style="padding:1rem">'+esc(e.message)+'</p>';}
+}
+
+// ══════════════════════════════
+// MESSAGING
+// ══════════════════════════════
+function messageSeller(listingId){
+  if(!isLoggedIn()){showNotif('Please log in to message sellers');openModal('auth-modal');return;}
+  const item=listings.find(l=>l.id===listingId);
+  if(!item)return;
+  if(Number(item.sellerId)===Number(me.id)){showNotif('This is your own listing');return;}
+  activeThread={listingId:Number(listingId),otherId:Number(item.sellerId),otherName:item.seller,title:item.title};
+  closeModal('view-modal');
+  openThreadView();
+}
+
+function openMessages(){
+  if(!isLoggedIn()){openModal('auth-modal');return;}
+  activeThread=null;
+  openModal('msg-modal');
+  document.getElementById('msg-title').textContent='💬 Messages';
+  loadConversations();
+}
+function closeMsg(){ stopThreadPoll(); closeModal('msg-modal'); }
+
+async function loadConversations(){
+  const body=document.getElementById('msg-body');
+  body.innerHTML='<p style="color:var(--muted)">Loading…</p>';
+  try{
+    const data=await api('/conversations');
+    const convos=data.conversations||[];
+    if(!convos.length){body.innerHTML='<p style="color:var(--muted)">No conversations yet. Tap “Message” on any listing to start.</p>';return;}
+    body.innerHTML=convos.map(c=>`
+      <div onclick="openThread(${c.listingId},${c.otherId},'${esc(c.otherName).replace(/'/g,"\\'")}','${esc(c.listingTitle).replace(/'/g,"\\'")}')"
+        style="display:flex;gap:.75rem;align-items:center;padding:.85rem;border-bottom:1px solid var(--border);cursor:pointer">
+        <div class="seller-avatar">${esc((c.otherName||'?').charAt(0))}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;display:flex;justify-content:space-between">${esc(c.otherName)} ${c.unread?`<span style="background:var(--red);color:#fff;font-size:.65rem;padding:1px 7px;border-radius:10px">${c.unread}</span>`:''}</div>
+          <div style="font-size:.78rem;color:var(--muted)">${esc(c.listingTitle)}</div>
+          <div style="font-size:.82rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.last)}</div>
+        </div>
+      </div>`).join('');
+  }catch(e){body.innerHTML='<p>'+esc(e.message)+'</p>';}
+}
+
+function openThread(listingId,otherId,otherName,title){
+  activeThread={listingId,otherId,otherName,title};
+  openThreadView();
+}
+function openThreadView(){
+  openModal('msg-modal');
+  document.getElementById('msg-title').innerHTML=`<span onclick="backToConvos()" style="cursor:pointer">←</span> ${esc(activeThread.otherName)}`;
+  const body=document.getElementById('msg-body');
+  body.innerHTML=`
+    <div style="font-size:.78rem;color:var(--muted);padding-bottom:.5rem;border-bottom:1px solid var(--border)">Re: ${esc(activeThread.title||'')}</div>
+    <div id="thread-msgs" style="height:300px;overflow-y:auto;padding:.75rem 0;display:flex;flex-direction:column;gap:.4rem"></div>
+    <div style="display:flex;gap:.5rem;border-top:1px solid var(--border);padding-top:.75rem">
+      <input id="msg-input" placeholder="Type a message…" style="flex:1;padding:.7rem;border:1px solid var(--border);border-radius:8px" onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="btn-sell" onclick="sendMessage()">Send</button>
+    </div>`;
+  loadThread();
+  startThreadPoll();
+}
+function backToConvos(){ stopThreadPoll(); activeThread=null; document.getElementById('msg-title').textContent='💬 Messages'; loadConversations(); }
+
+async function loadThread(){
+  if(!activeThread)return;
+  try{
+    const data=await api(`/messages/${activeThread.listingId}/${activeThread.otherId}`);
+    const wrap=document.getElementById('thread-msgs');
+    if(!wrap)return;
+    wrap.innerHTML=(data.messages||[]).map(m=>{
+      const mine=Number(m.from)===Number(me.id);
+      return `<div style="align-self:${mine?'flex-end':'flex-start'};max-width:75%;background:${mine?'var(--gold)':'var(--off)'};color:${mine?'#fff':'var(--text)'};padding:.5rem .75rem;border-radius:10px;font-size:.88rem">${esc(m.body)}</div>`;
+    }).join('');
+    wrap.scrollTop=wrap.scrollHeight;
+    // Opening the thread marks messages read server-side; refresh the badge now
+    // so a cleared conversation stops showing as unread immediately.
+    pollUnread();
+  }catch(e){/* silent during poll */}
+}
+
+async function sendMessage(){
+  const input=document.getElementById('msg-input');
+  const body=input.value.trim();
+  if(!body||!activeThread)return;
+  input.value='';
+  try{
+    await api('/messages/send',{method:'POST',body:{to:activeThread.otherId,listing:activeThread.listingId,body}});
+    loadThread();
+  }catch(e){showNotif(e.message);input.value=body;}
+}
+function startThreadPoll(){ stopThreadPoll(); msgPoll=setInterval(loadThread,4000); }
+function stopThreadPoll(){ if(msgPoll){clearInterval(msgPoll);msgPoll=null;} }
+
+let lastUnreadTotal = 0;
+let lastConversations = [];
+async function pollUnread(){
+  if(!isLoggedIn())return;
+  try{
+    const data=await api('/conversations');
+    const convos=data.conversations||[];
+    const unread=convos.reduce((n,c)=>n+(c.unread||0),0);
+    const el=document.getElementById('nav-unread');
+    if(el)el.textContent=unread?'('+unread+')':'';
+    // Bottom-nav messages dot.
+    const bnb=document.getElementById('bn-msg-badge');
+    if(bnb)bnb.style.display=unread?'block':'none';
+
+    // Detect a genuinely NEW incoming message (unread count went up) and
+    // surface a clickable notification that jumps straight to the thread.
+    if(unread > lastUnreadTotal && lastUnreadTotal !== 0){
+      // Find the conversation with the newest unread message.
+      const withUnread = convos.filter(c=>c.unread>0)
+        .sort((a,b)=>new Date(b.time)-new Date(a.time));
+      if(withUnread.length){
+        const c=withUnread[0];
+        showMessageNotif(c);
+      }
+    }
+    // On first load, if there are unread messages, badge only (no popup spam).
+    lastUnreadTotal = unread;
+    lastConversations = convos;
+  }catch(e){}
+}
+
+// A tappable message notification. Clicking it opens that exact conversation.
+function showMessageNotif(c){
+  const el=document.getElementById('msg-notif');
+  if(!el)return;
+  el.querySelector('#msg-notif-name').textContent=c.otherName||'New message';
+  el.querySelector('#msg-notif-text').textContent=c.last||'';
+  el.querySelector('#msg-notif-listing').textContent=c.listingTitle?('Re: '+c.listingTitle):'';
+  el.onclick=()=>{
+    hideMessageNotif();
+    openMessages();
+    openThread(c.listingId,c.otherId,c.otherName,c.listingTitle);
+  };
+  el.classList.add('show');
+  clearTimeout(el._timer);
+  el._timer=setTimeout(hideMessageNotif,8000);
+}
+function hideMessageNotif(){
+  const el=document.getElementById('msg-notif');
+  if(el)el.classList.remove('show');
+}
+
+// ══════════════════════════════
+// POST AD  (now requires login + uploads to server)
+// ══════════════════════════════
+function openSell(){
+  if(!isLoggedIn()){showNotif('Please log in to post an ad');openModal('auth-modal');return;}
+  // prefill seller name/phone from account
+  const s=document.getElementById('ad-seller'); if(s&&!s.value)s.value=me.name;
+  const p=document.getElementById('ad-phone'); if(p&&!p.value&&me.phone)p.value=me.phone;
+  openModal('sell-modal');
+}
+
+let currentStep=1;
+function goStep(n){
+  if(n>currentStep&&!validateCurrentStep())return;
+  [1,2,3,4].forEach(i=>{
+    document.getElementById('step-'+i).style.display=i===n?'block':'none';
+    const dot=document.getElementById('sd'+i);const lbl=document.getElementById('sl'+i);
+    if(i<n){dot.className='step-dot done';dot.textContent='✓'}
+    else if(i===n){dot.className='step-dot active';dot.textContent=i;lbl.className='step-label active'}
+    else{dot.className='step-dot';dot.textContent=i;lbl.className='step-label'}
+    if(i<4){const line=document.getElementById('sline'+i);line.className='step-line'+(i<n?' done':'')}
+  });
+  currentStep=n;
+  if(n===4)buildReview();
+}
+function validateCurrentStep(){
+  if(currentStep===1&&!document.getElementById('ad-cat').value){showNotif('Please select a category');return false}
+  if(currentStep===2){
+    if(!document.getElementById('ad-title').value.trim()){showNotif('Please enter a title');return false}
+    if(!document.getElementById('ad-price').value){showNotif('Please enter a price');return false}
+    if(!document.getElementById('ad-location').value){showNotif('Please select a location');return false}
+    if(!document.getElementById('ad-desc').value.trim()){showNotif('Please add a description');return false}
+  }
+  if(currentStep===3){
+    if(!document.getElementById('ad-seller').value.trim()){showNotif('Please enter your name');return false}
+    if(!document.getElementById('ad-phone').value.trim()){showNotif('Please enter your WhatsApp number');return false}
+  }
+  return true;
+}
+function updateCatUI(){
+  const cat=document.getElementById('ad-cat').value;
+  const grp=document.getElementById('subcat-group');
+  const sel=document.getElementById('ad-subcat');
+  if(cat&&SUBCATS[cat]){sel.innerHTML=SUBCATS[cat].map(s=>`<option>${s}</option>`).join('');grp.style.display='block'}
+  else grp.style.display='none';
+  renderCatFields(cat);
+}
+
+// Build the niche-specific fields for the chosen category.
+function renderCatFields(cat,values,containerId){
+  const wrap=document.getElementById(containerId||'cat-fields');
+  if(!wrap)return;
+  values=values||{};
+  const fields=CAT_FIELDS[cat];
+  if(!fields){wrap.innerHTML='';return;}
+  wrap.innerHTML=`
+    <div style="margin:.25rem 0 .5rem;font-weight:600;color:var(--navy)">${CAT_LABELS[cat]} details</div>
+    <div class="cat-fields-grid">
+      ${fields.map(f=>{
+        const v=values[f.key]!=null?values[f.key]:'';
+        if(f.type==='select'){
+          return `<div class="form-group"><label>${f.label}</label><select data-attr="${f.key}"><option value="">Select</option>${f.opts.map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('')}</select></div>`;
+        }
+        const t=f.type==='number'?'number':'text';
+        return `<div class="form-group"><label>${f.label}</label><input type="${t}" data-attr="${f.key}" value="${esc(v)}" placeholder="${esc(f.label)}"></div>`;
+      }).join('')}
+    </div>`;
+}
+
+// Collect attribute values entered in a cat-fields container.
+function collectAttributes(containerId){
+  const wrap=document.getElementById(containerId||'cat-fields');
+  const attrs={};
+  if(wrap){
+    wrap.querySelectorAll('[data-attr]').forEach(el=>{
+      const k=el.getAttribute('data-attr');
+      const v=(el.value||'').trim();
+      if(v!=='')attrs[k]=v;
+    });
+  }
+  return attrs;
+}
+
+// Photos: accept multiple files at once, upload each, keep id+url.
+const MAX_PHOTOS = 10;
+async function handlePhotos(e){
+  const files = Array.from(e.target.files || []);
+  e.target.value = ''; // allow re-selecting the same file later
+  if(!files.length) return;
+  const room = MAX_PHOTOS - pendingPhotos.length;
+  if(room <= 0){ showNotif('You can add up to '+MAX_PHOTOS+' photos'); return; }
+  const toUpload = files.slice(0, room);
+  if(files.length > room) showNotif('Only '+room+' more photo(s) allowed');
+
+  for(const file of toUpload){
+    // Show an instant local preview with a spinner while it uploads.
+    const tempId = 'tmp_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    const localUrl = URL.createObjectURL(file);
+    pendingPhotos.push({ id:null, url:localUrl, temp:tempId, uploading:true });
+    renderPhotoPreviews();
+    try{
+      const fd=new FormData(); fd.append('file',file);
+      const data=await api('/upload',{method:'POST',body:fd});
+      const slot=pendingPhotos.find(p=>p.temp===tempId);
+      if(slot){ slot.id=data.image_id; slot.url=data.image_url||localUrl; slot.uploading=false; }
+    }catch(err){
+      pendingPhotos = pendingPhotos.filter(p=>p.temp!==tempId);
+      showNotif('A photo failed to upload: '+err.message);
+    }
+    renderPhotoPreviews();
+  }
+}
+
+function renderPhotoPreviews(){
+  const grid=document.getElementById('photo-grid');
+  if(!grid)return;
+  grid.innerHTML=pendingPhotos.map((p,i)=>`
+    <div class="photo-preview">
+      <img src="${esc(p.url)}" alt="photo ${i+1}">
+      ${p.uploading?'<div class="ph-spin">Uploading…</div>':''}
+      ${i===0?'<span class="ph-main">Main</span>':''}
+      <button class="ph-remove" onclick="removePhoto(${i})" title="Remove">✕</button>
+    </div>`).join('');
+  const hint=document.getElementById('photo-hint');
+  if(hint)hint.textContent=pendingPhotos.length?`${pendingPhotos.length} photo(s) added. First photo is the main one.`:'First photo becomes the main listing photo.';
+}
+
+function removePhoto(i){
+  pendingPhotos.splice(i,1);
+  renderPhotoPreviews();
+}
+
+function buildReview(){
+  const cat=document.getElementById('ad-cat').value;
+  const title=document.getElementById('ad-title').value;
+  const price=parseFloat(document.getElementById('ad-price').value)||0;
+  const loc=document.getElementById('ad-location').value;
+  const cond=document.getElementById('ad-condition').value;
+  const neg=document.getElementById('ad-neg').value;
+  const seller=document.getElementById('ad-seller').value;
+  const phone=document.getElementById('ad-phone').value;
+  document.getElementById('review-content').innerHTML=`
+    <div style="background:var(--off);border-radius:var(--radius);padding:1rem;margin-bottom:1rem;border:1px solid var(--border)">
+      <div style="font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:.25rem">${fmtPrice(price)}</div>
+      <div style="font-weight:600;margin-bottom:.25rem">${catEmojis[cat]||'📦'} ${esc(title)}</div>
+      <div style="font-size:.82rem;color:var(--muted)">📍 ${esc(loc)}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;font-size:.85rem">
+      ${[['Category',cat],['Condition',cond],['Negotiable',neg==='yes'?'Yes':'No'],['Seller',seller],['WhatsApp',phone]].map(([k,v])=>`<div style="background:var(--off);padding:.6rem .75rem;border-radius:6px;border:1px solid var(--border)"><div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">${k}</div><div style="font-weight:600;margin-top:2px">${esc(v)||'—'}</div></div>`).join('')}
+    </div>`;
+}
+
+// ══════════════════════════════
+// BILLING / CHECKOUT
+// ══════════════════════════════
+let billingInfo = null;
+
+async function loadEntitlement(){
+  try{ billingInfo = await api('/entitlement'); }catch(e){ billingInfo=null; }
+  return billingInfo;
+}
+
+// Open the plans + per-ad checkout screen.
+async function openPlans(reasonTitle){
+  if(!isLoggedIn()){ openModal('auth-modal'); return; }
+  openModal('plans-modal');
+  const body=document.getElementById('plans-body');
+  body.innerHTML='<p style="color:var(--muted)">Loading plans…</p>';
+  document.getElementById('plans-title').textContent=reasonTitle||'Upgrade your account';
+  const info=await loadEntitlement();
+  if(!info){ body.innerHTML='<p>Could not load plans. Please try again.</p>'; return; }
+
+  const naira=n=>'₦'+Number(n).toLocaleString();
+  // Current status line.
+  let status='';
+  if(info.subscription){
+    const s=info.subscription;
+    status=`<div style="background:var(--gold-pale);border:1px solid var(--gold);border-radius:8px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.85rem">
+      Active plan: <strong>${esc(s.name)}</strong> · ${s.ads-s.used} of ${s.ads} ads left</div>`;
+  } else if(info.credits>0){
+    status=`<div style="background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.85rem">You have <strong>${info.credits}</strong> ad credit(s) ready to use.</div>`;
+  }
+
+  // Per-ad one-off box.
+  const oneoff=`
+    <div class="oneoff-box">
+      <div class="plan-head"><span class="plan-name">Pay per ad</span><span class="plan-price">${naira(info.per_ad)} <small>/ ad</small></span></div>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:.6rem">Just need to post one more? Pay for a single ad — no subscription.</p>
+      <div class="pay-choice">
+        ${PAYSTACK_PUBLIC_KEY?`<button onclick="payForAd('paystack')">Pay with Paystack</button>`:''}
+        ${FLW_PUBLIC_KEY?`<button onclick="payForAd('flutterwave')">Pay with Flutterwave</button>`:''}
+        ${(!PAYSTACK_PUBLIC_KEY&&!FLW_PUBLIC_KEY)?'<span style="color:var(--muted);font-size:.8rem">Payment not configured yet.</span>':''}
+      </div>
+    </div>`;
+
+  // Subscription plans.
+  const plans=info.plans;
+  const order=['starter','business','premium'];
+  const planCards=order.filter(k=>plans[k]).map(k=>{
+    const p=plans[k];
+    const adsTxt=p.ads>=9999?'Unlimited ads':`${p.ads} ads / month`;
+    const popular=k==='business'?'<span class="plan-tag">POPULAR</span>':'';
+    return `<div class="plan-card ${k==='business'?'popular':''}">
+      <div class="plan-head"><span class="plan-name">${esc(p.name)}${popular}</span><span class="plan-price">${naira(p.price)} <small>/ mo</small></span></div>
+      <ul class="plan-feats">
+        <li>${adsTxt}</li>
+        ${p.featured?'<li>Featured placement (top + badge)</li>':'<li>Standard placement</li>'}
+        ${k==='premium'?'<li>Priority support</li>':''}
+      </ul>
+      <div class="pay-choice">
+        ${PAYSTACK_PUBLIC_KEY?`<button onclick="subscribePlan('${k}','paystack')">Paystack</button>`:''}
+        ${FLW_PUBLIC_KEY?`<button onclick="subscribePlan('${k}','flutterwave')">Flutterwave</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  body.innerHTML=`${status}${oneoff}
+    <h4 style="margin:.5rem 0 .85rem">Or subscribe & save</h4>${planCards}
+    <p style="font-size:.75rem;color:var(--muted);text-align:center;margin-top:.5rem">Secure payment · Cancel anytime · Prices in Naira</p>`;
+}
+
+// Generate a unique payment reference.
+function payRef(){ return 'WELLS-'+Date.now()+'-'+Math.random().toString(36).slice(2,8); }
+
+// Launch a payment for the given amount; resolves with {provider, reference}.
+function startPayment(provider, amountNaira){
+  return new Promise((resolve,reject)=>{
+    const email=(me&&me.email&&me.email.indexOf('@wells.local')===-1)?me.email:('user'+(me?me.id:'0')+'@wellshome.ng');
+    if(provider==='paystack'){
+      if(typeof PaystackPop==='undefined'){reject(new Error('Paystack not loaded'));return;}
+      const handler=PaystackPop.setup({
+        key:PAYSTACK_PUBLIC_KEY,
+        email:email,
+        amount:Math.round(amountNaira*100), // kobo
+        currency:'NGN',
+        ref:payRef(),
+        onClose:()=>reject(new Error('Payment cancelled')),
+        callback:(resp)=>resolve({provider:'paystack',reference:resp.reference}),
+      });
+      handler.openIframe();
+    } else if(provider==='flutterwave'){
+      if(typeof FlutterwaveCheckout==='undefined'){reject(new Error('Flutterwave not loaded'));return;}
+      FlutterwaveCheckout({
+        public_key:FLW_PUBLIC_KEY,
+        tx_ref:payRef(),
+        amount:amountNaira,
+        currency:'NGN',
+        customer:{email:email,name:(me&&me.name)||'Wells User'},
+        callback:(resp)=>{
+          const ref=resp.transaction_id||resp.tx_ref;
+          resolve({provider:'flutterwave',reference:String(ref)});
+        },
+        onclose:()=>{/* user may have completed; ignore */},
+        customizations:{title:'Wells Marketplace',description:'Ad payment'},
+      });
+    } else {
+      reject(new Error('Unknown payment method'));
+    }
+  });
+}
+
+// Pay ₦300 for one ad credit.
+async function payForAd(provider){
+  try{
+    showNotif('Opening secure checkout…');
+    const pay=await startPayment(provider, billingInfo.per_ad);
+    showNotif('Verifying payment…');
+    const res=await api('/buy-ad',{method:'POST',body:{provider:pay.provider,reference:pay.reference}});
+    closeModal('plans-modal');
+    showNotif('Payment confirmed! You can now post your ad 🎉');
+    // Reopen the post form so they can finish.
+    openSell();
+  }catch(e){ showNotif(e.message||'Payment failed'); }
+}
+
+// Subscribe to a monthly plan.
+async function subscribePlan(planKey, provider){
+  try{
+    const plan=billingInfo.plans[planKey];
+    showNotif('Opening secure checkout…');
+    const pay=await startPayment(provider, plan.price);
+    showNotif('Verifying payment…');
+    const res=await api('/subscribe',{method:'POST',body:{provider:pay.provider,reference:pay.reference,plan:planKey}});
+    closeModal('plans-modal');
+    showNotif(plan.name+' plan active! You can now post 🎉');
+    openSell();
+  }catch(e){ showNotif(e.message||'Payment failed'); }
+}
+
+async function submitAd(){
+  const cat=document.getElementById('ad-cat').value;
+  const stillUploading=pendingPhotos.some(p=>p.uploading);
+  if(stillUploading){ showNotif('Please wait — photos are still uploading'); return; }
+  const imageIds=pendingPhotos.filter(p=>p.id).map(p=>p.id);
+  const payload={
+    cat,
+    subcat:(document.getElementById('ad-subcat')||{}).value||'',
+    title:document.getElementById('ad-title').value.trim(),
+    price:parseFloat(document.getElementById('ad-price').value)||0,
+    location:document.getElementById('ad-location').value,
+    condition:document.getElementById('ad-condition').value,
+    negotiable:document.getElementById('ad-neg').value==='yes',
+    seller:document.getElementById('ad-seller').value.trim(),
+    phone:document.getElementById('ad-phone').value.trim(),
+    desc:document.getElementById('ad-desc').value.trim(),
+    emoji:catEmojis[cat]||'📦',
+    image_ids:imageIds,
+    attributes:collectAttributes(),
+  };
+  const btn=(typeof event!=='undefined'&&event&&event.target)?event.target:document.querySelector('#step-4 button[onclick*="submitAd"]');
+  const btnLabel=btn?btn.textContent:'';
+  if(btn){btn.disabled=true;btn.textContent='Posting…';}
+  try{
+    const data=await api('/listings',{method:'POST',body:payload});
+    closeModal('sell-modal');
+    resetAdForm();
+    showNotif(data.message || 'Your ad was submitted!');
+    loadListings();
+  }catch(e){
+    // If the server says payment is required, open the plans/checkout instead of erroring.
+    if(e.status===402){
+      closeModal('sell-modal');
+      openPlans('You\u2019ve used your free post');
+    } else {
+      showNotif(e.message);
+    }
+  }
+  if(btn){btn.disabled=false;btn.textContent=btnLabel||'🚀 Publish Ad — Free';}
+}
+
+function resetAdForm(){
+  ['ad-cat','ad-title','ad-price','ad-location','ad-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  pendingPhotos=[];
+  renderPhotoPreviews();
+  document.getElementById('subcat-group').style.display='none';
+  const cf=document.getElementById('cat-fields'); if(cf)cf.innerHTML='';
+  goStep(1);
+}
+
+// ══════════════════════════════
+// MODAL / TABS / NOTIF / STATS
+// ══════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)closeModal(this.id)}));
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showNotif(msg){
+  const el=document.getElementById('notif');
+  document.getElementById('notif-text').textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+function updateStats(){
+  animateNum('stat-listings',listings.length);
+  animateNum('stat-sellers',new Set(listings.map(l=>l.seller)).size);
+}
+function animateNum(id,target){
+  const el=document.getElementById(id);if(!el)return;let curr=0;
+  const step=Math.max(1,Math.ceil(target/20));
+  const t=setInterval(()=>{curr=Math.min(curr+step,target);el.textContent=curr;if(curr>=target)clearInterval(t)},50);
+}
+function updateCatCounts(){
+  ['property','vehicles','electronics','appliances','furniture','fashion','other'].forEach(cat=>{
+    const count=listings.filter(l=>l.cat===cat).length;
+    const el=document.getElementById('cnt-'+cat);
+    if(el)el.textContent=count+' listing'+(count!==1?'s':'');
+  });
+}
+
+// ══════════════════════════════
+// INIT
+// ══════════════════════════════
+document.addEventListener('DOMContentLoaded',function(){
+  refreshAuthUI();
+  loadListings();
+  initLightboxSwipe();
+  loadAnnouncement();
+  if(isLoggedIn()){
+    pollUnread(); setInterval(pollUnread,8000);
+    // Refresh full profile (business details, avatar) in the background.
+    api('/me').then(u=>{ if(u){ me={...me,...u}; localStorage.setItem('wells_user',JSON.stringify(me)); refreshAuthUI(); } }).catch(()=>{});
+  }
+});
+
+// In-app broadcast banner.
+async function loadAnnouncement(){
+  try{
+    const data=await api('/announcement');
+    const a=data.announcement;
+    if(!a)return;
+    // Don't show if the user already dismissed this exact announcement.
+    if(localStorage.getItem('wells_dismissed_announce')===a.id)return;
+    document.getElementById('announce-subject').textContent=a.subject;
+    document.getElementById('announce-text').textContent=a.body;
+    document.getElementById('announce-banner').classList.add('show');
+    window._announceId=a.id;
+  }catch(e){}
+}
+function dismissAnnouncement(){
+  document.getElementById('announce-banner').classList.remove('show');
+  if(window._announceId)localStorage.setItem('wells_dismissed_announce',window._announceId);
+}
+</script>
+</body>
+</html>
