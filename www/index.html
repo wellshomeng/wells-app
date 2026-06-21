@@ -330,6 +330,50 @@ input,textarea,select{font-family:inherit}
 .bn-item.active .bn-icon{stroke:var(--gold)}
 .bn-badge{position:absolute;top:4px;right:calc(50% - 18px);min-width:8px;height:8px;background:var(--red);border-radius:50%}
 
+/* ═══ APP-STYLE MOBILE LAYOUT (phone only) ═══ */
+.m-search-hero{display:none}
+.subcat-page{display:none}
+/* similar ads in detail view */
+.similar-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.similar-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;background:#fff}
+.similar-card:active{opacity:.85}
+.similar-img{height:110px;background:var(--off);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.similar-img img{width:100%;height:100%;object-fit:cover}
+.similar-emoji{font-size:2rem}
+.similar-price{font-weight:700;color:var(--gold);font-size:.9rem;padding:.4rem .5rem 0}
+.similar-title{font-size:.8rem;color:var(--text);padding:0 .5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.similar-loc{font-size:.7rem;color:var(--muted);padding:0 .5rem .5rem}
+@media(max-width:768px){
+  /* hide website chrome in the app */
+  header.header{display:none}
+  footer.footer{display:none!important}
+  .hero{display:none}
+  /* hide the in-grid "Post Free" card (Sell tab replaces it) */
+  .cat-card.post-card{display:none}
+  /* search hero */
+  .m-search-hero{display:block;background:linear-gradient(160deg,var(--navy),var(--navy2));padding:1.75rem 1rem 2.25rem}
+  .m-search-hero h2{color:#fff;text-align:center;font-family:'Syne',sans-serif;font-size:1.15rem;margin-bottom:1.1rem}
+  .m-search-bar{display:flex;gap:.5rem}
+  .m-search-state{flex:0 0 38%;max-width:140px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;color:#fff;font-size:.85rem;padding:.6rem .5rem;outline:none}
+  .m-search-state option{color:#000}
+  .m-search-row{flex:1;display:flex;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:.5rem .75rem;min-width:0}
+  .m-search-row input{flex:1;min-width:0;background:transparent;border:none;color:#fff;font-size:.95rem;outline:none}
+  .m-search-row input::placeholder{color:rgba(255,255,255,.6)}
+  .m-search-row button{background:transparent;font-size:1.1rem;cursor:pointer}
+  body{padding-top:0}
+  /* subcategory list page */
+  .subcat-row{display:flex;align-items:center;gap:.85rem;padding:1rem;border-bottom:1px solid var(--border);cursor:pointer;background:#fff}
+  .subcat-row:active{background:var(--off)}
+  .subcat-ic{width:48px;height:48px;border-radius:12px;background:var(--off);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+  .subcat-tx{flex:1;min-width:0}
+  .subcat-tx .t{font-weight:600;font-size:.95rem;color:var(--text)}
+  .subcat-tx .c{font-size:.78rem;color:var(--muted)}
+  .subcat-arrow{color:var(--muted);font-size:1.1rem}
+  .subcat-head{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;display:flex;align-items:center;gap:.75rem;padding:1rem}
+  .subcat-head button{background:rgba(255,255,255,.15);color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;flex-shrink:0}
+  .subcat-head h3{font-size:1rem;font-family:'Syne',sans-serif}
+}
+
 /* RESPONSIVE */
 @media(max-width:768px){
   .bottom-nav{display:grid}
@@ -362,7 +406,6 @@ input,textarea,select{font-family:inherit}
   .filter-bar{flex-direction:column;align-items:stretch}
   .form-row{grid-template-columns:1fr}
   .photo-grid{grid-template-columns:repeat(3,1fr)}
-  .fab{display:flex}
   .trust-strip{gap:1rem;padding:1rem}
   .detail-cta{flex-direction:column}
   .dash-wrap{grid-template-columns:1fr;gap:1rem}
@@ -478,6 +521,32 @@ input,textarea,select{font-family:inherit}
   </nav>
 </header>
 
+<!-- MOBILE SEARCH HERO (app only) -->
+<div class="m-search-hero" id="m-search-hero">
+  <h2>What are you looking for?</h2>
+  <div class="m-search-bar">
+    <select id="m-search-state" aria-label="Location">
+      <option value="">All Nigeria</option>
+      <option>Osogbo</option>
+      <option>Lagos</option>
+      <option>Abuja</option>
+      <option>Ibadan</option>
+      <option>Ilesa</option>
+      <option>Ede</option>
+      <option>Ife</option>
+      <option>Port Harcourt</option>
+      <option>Kano</option>
+      <option>Benin City</option>
+      <option>Abeokuta</option>
+      <option>Ilorin</option>
+    </select>
+    <div class="m-search-row">
+      <input type="text" id="m-search-input" placeholder="I am looking for..." onkeydown="if(event.key==='Enter')mobileSearch()">
+      <button onclick="mobileSearch()" aria-label="Search">🔍</button>
+    </div>
+  </div>
+</div>
+
 <!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
@@ -509,7 +578,7 @@ input,textarea,select{font-family:inherit}
         <div class="cat-card" onclick="filterCat('furniture',null)"><div class="cat-icon">🛋</div><div class="cat-name">Furniture</div><div class="cat-count" id="cnt-furniture">0 listings</div></div>
         <div class="cat-card" onclick="filterCat('fashion',null)"><div class="cat-icon">👗</div><div class="cat-name">Fashion</div><div class="cat-count" id="cnt-fashion">0 listings</div></div>
         <div class="cat-card" onclick="filterCat('other',null)"><div class="cat-icon">📦</div><div class="cat-name">Other</div><div class="cat-count" id="cnt-other">0 listings</div></div>
-        <div class="cat-card" onclick="openSell()" style="border-style:dashed;border-color:var(--gold)"><div class="cat-icon">➕</div><div class="cat-name" style="color:var(--gold)">Post Free</div><div class="cat-count">Sell anything</div></div>
+        <div class="cat-card post-card" onclick="openSell()" style="border-style:dashed;border-color:var(--gold)"><div class="cat-icon">➕</div><div class="cat-name" style="color:var(--gold)">Post Free</div><div class="cat-count">Sell anything</div></div>
       </div>
     </div>
 
@@ -665,6 +734,15 @@ input,textarea,select{font-family:inherit}
     <h2 id="page-title">Page</h2>
   </div>
   <div class="page-content" id="page-content"></div>
+</div>
+
+<!-- SUBCATEGORY PAGE (mobile app) -->
+<div class="page-overlay" id="subcat-overlay">
+  <div class="subcat-head">
+    <button onclick="closeSubcat()">←</button>
+    <h3 id="subcat-title">Category</h3>
+  </div>
+  <div id="subcat-list"></div>
 </div>
 
 <!-- NOTIFICATION -->
@@ -913,7 +991,7 @@ input,textarea,select{font-family:inherit}
 const API = 'https://wellshome.ng/wp-json/wells/v1';
 
 // >>> Your Paystack PUBLIC key (safe to expose). Leave blank to disable Paystack.
-const PAYSTACK_PUBLIC_KEY = ''; // e.g. 'pk_live_xxxxx'
+const PAYSTACK_PUBLIC_KEY = 'pk_live_e1b0f392003d9460e6d5a0b9aa58f965ccb4c5a6'; // e.g. 'pk_live_xxxxx'
 // >>> Your Flutterwave PUBLIC key (safe to expose). Leave blank to disable Flutterwave.
 const FLW_PUBLIC_KEY = ''; // e.g. 'FLWPUBK-xxxxx'
 
@@ -921,6 +999,9 @@ const FLW_PUBLIC_KEY = ''; // e.g. 'FLWPUBK-xxxxx'
 let listings = [];
 let savedIds = JSON.parse(localStorage.getItem('wells_saved') || '[]');
 let currentFilter = 'all';
+let currentSubcat = '';   // active subcategory filter (mobile flow)
+let currentSearch = '';   // active text search
+let currentSearchLoc = ''; // active location filter from mobile search
 let token = localStorage.getItem('wells_token') || '';
 let me = JSON.parse(localStorage.getItem('wells_user') || 'null');
 let pendingPhotos = [];          // [{id, url}] uploaded photos for the new ad
@@ -1194,7 +1275,27 @@ async function loadListings(){
     const cond=document.getElementById('filter-condition'); if(cond&&cond.value)params.set('condition',cond.value);
     const sort=document.getElementById('filter-sort'); if(sort&&sort.value)params.set('sort',sort.value);
     const data = await api('/listings?'+params.toString());
-    listings = data.listings || [];
+    let items = data.listings || [];
+    // Client-side subcategory filter (matches the listing's subcat attribute).
+    if(currentSubcat){
+      const sc=currentSubcat.toLowerCase();
+      items=items.filter(l=>{
+        const a=l.attributes||{};
+        const hay=[(a.subtype||''),(a.type||''),(l.subcat||''),(l.title||'')].join(' ').toLowerCase();
+        return hay.includes(sc);
+      });
+    }
+    // Client-side text search across title/description/location.
+    if(currentSearch){
+      const q=currentSearch.toLowerCase();
+      items=items.filter(l=>[(l.title||''),(l.desc||''),(l.location||'')].join(' ').toLowerCase().includes(q));
+    }
+    // Location filter from the mobile search state selector.
+    if(currentSearchLoc){
+      const lc=currentSearchLoc.toLowerCase();
+      items=items.filter(l=>(l.location||'').toLowerCase().includes(lc));
+    }
+    listings = items;
     renderListings(listings);
     updateStats();
     updateCatCounts();
@@ -1277,13 +1378,74 @@ function cardPills(item){
 // ══════════════════════════════
 // FILTERS / SEARCH  (now hit the server)
 // ══════════════════════════════
+function isMobile(){ return window.matchMedia('(max-width:768px)').matches; }
+
 function filterCat(cat,btn){
+  // On mobile, tapping a real category opens the subcategory page first (Jiji flow).
+  if(isMobile() && cat!=='all' && SUBCATS[cat]){
+    openSubcat(cat);
+    return;
+  }
   currentFilter=cat;
+  currentSubcat='';
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
   const labels={all:'All',property:'Property',vehicles:'Vehicles',electronics:'Electronics',appliances:'Appliances',furniture:'Furniture',fashion:'Fashion',other:'Other'};
   document.getElementById('listings-title').innerHTML=`${labels[cat]||'All'} <span>Listings</span>`;
   loadListings();
+}
+
+// ── Subcategory page (mobile app flow) ──
+const CAT_LABEL={property:'Property',vehicles:'Vehicles',electronics:'Electronics',appliances:'Appliances',furniture:'Furniture',fashion:'Fashion',other:'Other'};
+function openSubcat(cat){
+  const subs=SUBCATS[cat]||[];
+  document.getElementById('subcat-title').textContent=CAT_LABEL[cat]||cat;
+  const emoji=catEmojis[cat]||'📦';
+  const list=document.getElementById('subcat-list');
+  // First row = "All in <category>", then each subcategory.
+  let rows=`<div class="subcat-row" onclick="chooseSubcat('${cat}','')">
+      <div class="subcat-ic">${emoji}</div>
+      <div class="subcat-tx"><div class="t">All ${esc(CAT_LABEL[cat]||cat)}</div><div class="c">Browse everything</div></div>
+      <div class="subcat-arrow">›</div></div>`;
+  rows+=subs.map(s=>`<div class="subcat-row" onclick="chooseSubcat('${cat}','${esc(s)}')">
+      <div class="subcat-ic">${emoji}</div>
+      <div class="subcat-tx"><div class="t">${esc(s)}</div></div>
+      <div class="subcat-arrow">›</div></div>`).join('');
+  list.innerHTML=rows;
+  document.getElementById('subcat-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  window.scrollTo(0,0);
+}
+function closeSubcat(){
+  document.getElementById('subcat-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function chooseSubcat(cat,sub){
+  currentFilter=cat;
+  currentSubcat=sub||'';
+  currentSearch='';
+  closeSubcat();
+  const title=sub?`${esc(sub)}`:`${esc(CAT_LABEL[cat]||cat)}`;
+  document.getElementById('listings-title').innerHTML=`${title} <span>Listings</span>`;
+  loadListings();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Mobile search (searches all listings) ──
+function mobileSearch(){
+  const inp=document.getElementById('m-search-input');
+  const q=inp?inp.value.trim():'';
+  const st=document.getElementById('m-search-state');
+  const loc=st?st.value.trim():'';
+  currentSearch=q;
+  currentSearchLoc=loc;
+  currentFilter='all';
+  currentSubcat='';
+  const label = q ? `Results for "${esc(q)}"` : (loc ? `Listings in ${esc(loc)}` : 'All Listings');
+  document.getElementById('listings-title').innerHTML=`${label} <span></span>`;
+  loadListings();
+  const sec=document.getElementById('listings-grid');
+  if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // ══════════════════════════════
@@ -1301,10 +1463,14 @@ function navTab(tab){
   // home
   setActiveTab('home');
   // close any open modals/pages and return to the listings
-  ['view-modal','msg-modal','account-modal','plans-modal','sell-modal','edit-modal'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('open');});
+  ['view-modal','msg-modal','account-modal','plans-modal','sell-modal','edit-modal','subcat-overlay'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('open');});
   const po=document.getElementById('page-overlay'); if(po)po.classList.remove('open');
   document.body.style.overflow='';
   currentFilter='all';
+  currentSubcat='';
+  currentSearch='';
+  currentSearchLoc='';
+  const msi=document.getElementById('m-search-input'); if(msi)msi.value='';
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
   const allBtn=document.querySelector('.cat-btn'); if(allBtn)allBtn.classList.add('active');
   document.getElementById('listings-title').innerHTML='All <span>Listings</span>';
@@ -1456,11 +1622,34 @@ function viewListing(id){
         <button onclick="closeModal('view-modal')" class="btn-view" style="flex:1;padding:.85rem">Close</button>
       </div>
       <div class="safety-tip">🛡 Tip: Always inspect the item before paying. Meet in a safe, public place.</div>
+      <div id="similar-ads"></div>
     </div>`;
   renderGallery();
   openModal('view-modal');
+  renderSimilarAds(item);
   // Count the view (fire-and-forget).
   api('/listings/'+id+'/view',{method:'POST'}).catch(()=>{});
+}
+
+// Show other ads in the same category (Jiji "Similar ads").
+async function renderSimilarAds(item){
+  const box=document.getElementById('similar-ads');
+  if(!box)return;
+  try{
+    const data=await api('/listings?cat='+encodeURIComponent(item.cat||''));
+    const others=(data.listings||[]).filter(l=>l.id!==item.id).slice(0,6);
+    if(!others.length){ box.innerHTML=''; return; }
+    box.innerHTML=`<div class="detail-section"><h4>Similar ads</h4></div>
+      <div class="similar-grid">${others.map(l=>{
+        const img=l.image?`<img src="${esc(l.image)}" alt="${esc(l.title)}">`:`<div class="similar-emoji">${l.emoji||'📦'}</div>`;
+        return `<div class="similar-card" onclick="viewListing('${l.id}')">
+          <div class="similar-img">${img}</div>
+          <div class="similar-price">${fmtPrice(l.price)}</div>
+          <div class="similar-title">${esc(l.title)}</div>
+          <div class="similar-loc">📍 ${esc(l.location||'')}</div>
+        </div>`;
+      }).join('')}</div>`;
+  }catch(e){ box.innerHTML=''; }
 }
 
 function renderGallery(){
