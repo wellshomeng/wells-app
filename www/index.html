@@ -372,6 +372,21 @@ input,textarea,select{font-family:inherit}
   .subcat-head{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;display:flex;align-items:center;gap:.75rem;padding:1rem}
   .subcat-head button{background:rgba(255,255,255,.15);color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;flex-shrink:0}
   .subcat-head h3{font-size:1rem;font-family:'Syne',sans-serif}
+  /* dedicated results page */
+  #results-overlay{background:var(--bg,#fff)}
+  .results-head{position:sticky;top:0;z-index:10;background:var(--navy);display:flex;align-items:center;gap:.6rem;padding:.85rem 1rem}
+  .results-back{background:rgba(255,255,255,.15);color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;flex-shrink:0}
+  .results-search{flex:1;display:flex;gap:.4rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:.45rem .7rem;min-width:0}
+  .results-search input{flex:1;min-width:0;background:transparent;border:none;color:#fff;font-size:.9rem;outline:none}
+  .results-search input::placeholder{color:rgba(255,255,255,.6)}
+  .results-search button{background:transparent;cursor:pointer}
+  .results-chips{display:flex;gap:.5rem;overflow-x:auto;padding:.75rem 1rem;background:var(--off);border-bottom:1px solid var(--border);-webkit-overflow-scrolling:touch}
+  .results-chips::-webkit-scrollbar{display:none}
+  .rchip{flex-shrink:0;display:flex;align-items:center;gap:.35rem;background:#fff;border:1px solid var(--border);border-radius:20px;padding:.45rem .85rem;font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;white-space:nowrap}
+  .rchip.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+  .results-bar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;font-weight:600;font-size:.9rem}
+  .results-sort{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.45rem .85rem;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--text)}
+  .results-grid{padding:0 1rem 5rem}
 }
 
 /* RESPONSIVE */
@@ -743,6 +758,23 @@ input,textarea,select{font-family:inherit}
     <h3 id="subcat-title">Category</h3>
   </div>
   <div id="subcat-list"></div>
+</div>
+
+<!-- DEDICATED RESULTS PAGE (Jiji-style) -->
+<div class="page-overlay" id="results-overlay">
+  <div class="results-head">
+    <button class="results-back" onclick="closeResults()">←</button>
+    <div class="results-search">
+      <input type="text" id="results-search-input" placeholder="Search…" onkeydown="if(event.key==='Enter')applyResultsSearch()">
+      <button onclick="applyResultsSearch()" aria-label="Search">🔍</button>
+    </div>
+  </div>
+  <div class="results-chips" id="results-chips"></div>
+  <div class="results-bar">
+    <span id="results-count">Found 0 ads</span>
+    <button class="results-sort" id="results-sort-btn" onclick="cycleResultsSort()">↕ Sort</button>
+  </div>
+  <div class="results-grid listings-grid" id="results-grid"></div>
 </div>
 
 <!-- NOTIFICATION -->
@@ -1317,18 +1349,11 @@ async function loadListings(){
 // ══════════════════════════════
 // RENDER
 // ══════════════════════════════
-function renderListings(items){
-  const grid=document.getElementById('listings-grid');
-  const empty=document.getElementById('empty-state');
-  const countEl=document.getElementById('listing-count');
-  if(!items.length){grid.innerHTML='';empty.style.display='block';countEl.textContent='0 items';return}
-  empty.style.display='none';
-  countEl.textContent=items.length+' item'+(items.length!==1?'s':'');
-  grid.innerHTML=items.map(item=>{
-    const isSaved=savedIds.includes(item.id);
-    const img=item.image?`<img src="${esc(item.image)}" alt="${esc(item.title)}">`:`<span style="font-size:3rem">${item.emoji||'📦'}</span>`;
-    const badge=item.featured?'<span class="badge badge-featured">Featured</span>':item.condition==='new'?'<span class="badge badge-new">New</span>':'<span class="badge badge-used">Used</span>';
-    return`<div class="listing-card" onclick="viewListing('${item.id}')">
+function listingCardHTML(item){
+  const isSaved=savedIds.includes(item.id);
+  const img=item.image?`<img src="${esc(item.image)}" alt="${esc(item.title)}">`:`<span style="font-size:3rem">${item.emoji||'📦'}</span>`;
+  const badge=item.featured?'<span class="badge badge-featured">Featured</span>':item.condition==='new'?'<span class="badge badge-new">New</span>':'<span class="badge badge-used">Used</span>';
+  return`<div class="listing-card" onclick="viewListing('${item.id}')">
       <div class="listing-img">${img}${badge}
         <button class="save-btn ${isSaved?'saved':''}" onclick="event.stopPropagation();toggleSave('${item.id}',this)" title="Save">${isSaved?'♥':'♡'}</button>
       </div>
@@ -1346,7 +1371,21 @@ function renderListings(items){
         <button class="btn-view" onclick="event.stopPropagation();viewListing('${item.id}')">View →</button>
       </div>
     </div>`;
-  }).join('');
+}
+// Render a set of listings into any grid element.
+function renderListingsInto(grid, items){
+  if(!grid)return;
+  grid.innerHTML=items.map(listingCardHTML).join('');
+}
+
+function renderListings(items){
+  const grid=document.getElementById('listings-grid');
+  const empty=document.getElementById('empty-state');
+  const countEl=document.getElementById('listing-count');
+  if(!items.length){grid.innerHTML='';empty.style.display='block';countEl.textContent='0 items';return}
+  empty.style.display='none';
+  countEl.textContent=items.length+' item'+(items.length!==1?'s':'');
+  grid.innerHTML=items.map(listingCardHTML).join('');
 }
 
 // Build the small attribute pills shown on each card (e.g. "500 sqm", "4 bedrooms").
@@ -1421,14 +1460,98 @@ function closeSubcat(){
   document.body.style.overflow='';
 }
 function chooseSubcat(cat,sub){
-  currentFilter=cat;
-  currentSubcat=sub||'';
-  currentSearch='';
   closeSubcat();
-  const title=sub?`${esc(sub)}`:`${esc(CAT_LABEL[cat]||cat)}`;
-  document.getElementById('listings-title').innerHTML=`${title} <span>Listings</span>`;
-  loadListings();
-  window.scrollTo({top:0,behavior:'smooth'});
+  openResults(cat, sub||'');
+}
+
+// ══════════════════════════════
+// DEDICATED RESULTS PAGE (Jiji-style)
+// ══════════════════════════════
+let resultsState = { cat:'', sub:'', search:'', sort:'newest', chip:'' };
+const RESULTS_SORTS = ['newest','price-low','price-high'];
+const RESULTS_SORT_LABEL = {newest:'↕ Newest', 'price-low':'↕ Price ↑', 'price-high':'↕ Price ↓'};
+
+function openResults(cat, sub){
+  resultsState = { cat:cat, sub:sub||'', search:'', sort:'newest', chip:sub||'' };
+  // search bar placeholder
+  const label = CAT_LABEL[cat]||cat;
+  const inp=document.getElementById('results-search-input');
+  if(inp){ inp.value=''; inp.placeholder='Search in '+label; }
+  document.getElementById('results-sort-btn').textContent=RESULTS_SORT_LABEL['newest'];
+  renderResultsChips();
+  document.getElementById('results-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  window.scrollTo(0,0);
+  loadResults();
+}
+function closeResults(){
+  document.getElementById('results-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+// Build the filter chips row from the category's subcategories.
+function renderResultsChips(){
+  const box=document.getElementById('results-chips');
+  if(!box)return;
+  const subs=SUBCATS[resultsState.cat]||[];
+  let chips=`<div class="rchip ${resultsState.chip===''?'active':''}" onclick="pickResultsChip('')">All</div>`;
+  chips+=subs.map(s=>`<div class="rchip ${resultsState.chip===s?'active':''}" onclick="pickResultsChip('${esc(s)}')">${esc(s)}</div>`).join('');
+  box.innerHTML=chips;
+}
+function pickResultsChip(sub){
+  resultsState.chip=sub;
+  resultsState.sub=sub;
+  renderResultsChips();
+  loadResults();
+}
+function applyResultsSearch(){
+  const inp=document.getElementById('results-search-input');
+  resultsState.search=inp?inp.value.trim():'';
+  loadResults();
+}
+function cycleResultsSort(){
+  const i=RESULTS_SORTS.indexOf(resultsState.sort);
+  resultsState.sort=RESULTS_SORTS[(i+1)%RESULTS_SORTS.length];
+  document.getElementById('results-sort-btn').textContent=RESULTS_SORT_LABEL[resultsState.sort];
+  loadResults();
+}
+async function loadResults(){
+  const grid=document.getElementById('results-grid');
+  const countEl=document.getElementById('results-count');
+  if(grid)grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">Loading…</div>';
+  try{
+    const params=new URLSearchParams();
+    if(resultsState.cat) params.set('cat',resultsState.cat);
+    if(resultsState.sort) params.set('sort',resultsState.sort);
+    const data=await api('/listings?'+params.toString());
+    let items=data.listings||[];
+    // subcategory chip filter
+    if(resultsState.sub){
+      const sc=resultsState.sub.toLowerCase();
+      items=items.filter(l=>{
+        const a=l.attributes||{};
+        const hay=[(a.subtype||''),(a.type||''),(l.subcat||''),(l.title||'')].join(' ').toLowerCase();
+        return hay.includes(sc);
+      });
+    }
+    // text search
+    if(resultsState.search){
+      const q=resultsState.search.toLowerCase();
+      items=items.filter(l=>[(l.title||''),(l.desc||''),(l.location||'')].join(' ').toLowerCase().includes(q));
+    }
+    // make these the active listings so viewListing/related can find them
+    listings = items;
+    if(countEl)countEl.textContent='Found '+items.length+(items.length===1?' ad':' ads');
+    if(!items.length){
+      grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--muted)">
+        <div style="font-size:2.5rem;margin-bottom:.5rem">🔍</div>
+        <div style="font-weight:600;color:var(--text2)">No ads found here yet</div>
+        <div style="font-size:.85rem;margin-top:.35rem">Try another filter or check back soon.</div></div>`;
+      return;
+    }
+    renderListingsInto(grid, items);
+  }catch(e){
+    if(grid)grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">Couldn\u2019t load. <button class="btn-sell" onclick="loadResults()" style="margin-top:.5rem;padding:.5rem 1.2rem">Retry</button></div>';
+  }
 }
 
 // ── Mobile search (searches all listings) ──
@@ -1463,7 +1586,7 @@ function navTab(tab){
   // home
   setActiveTab('home');
   // close any open modals/pages and return to the listings
-  ['view-modal','msg-modal','account-modal','plans-modal','sell-modal','edit-modal','subcat-overlay'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('open');});
+  ['view-modal','msg-modal','account-modal','plans-modal','sell-modal','edit-modal','subcat-overlay','results-overlay'].forEach(id=>{const m=document.getElementById(id);if(m)m.classList.remove('open');});
   const po=document.getElementById('page-overlay'); if(po)po.classList.remove('open');
   document.body.style.overflow='';
   currentFilter='all';
